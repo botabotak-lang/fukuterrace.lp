@@ -1,4 +1,4 @@
-# fukuterace-lp
+# fukuterrace-LP
 
 This folder was created for the new landing page project.
 

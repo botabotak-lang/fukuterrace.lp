@@ -1,5 +1,5 @@
-// fukuterace-lp/assets/js/main.js
-(function(){
+// fukuterrace-LP/assets/js/main.js
+ (function(){
   // Mobile nav toggle
   const navToggle = document.getElementById('navToggle');
   const siteNav = document.getElementById('siteNav');
