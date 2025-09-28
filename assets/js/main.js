@@ -1,13 +1,19 @@
 // fukuterace-lp/assets/js/main.js
 (function(){
+  // Mobile nav toggle
   const navToggle = document.getElementById('navToggle');
   const siteNav = document.getElementById('siteNav');
   if (navToggle && siteNav){
     navToggle.addEventListener('click', () => {
-      const visible = getComputedStyle(siteNav).display !== 'none';
-      siteNav.style.display = visible ? 'none' : 'flex';
+      if (siteNav.style.display === 'flex' || siteNav.style.display === ''){
+        siteNav.style.display = 'none';
+      } else {
+        siteNav.style.display = 'flex';
+      }
     });
   }
+
+  // FAQ: smooth scroll removed per request
 
   // Smooth scroll for same-page anchors
   document.querySelectorAll('a[href^="#"]').forEach(a => {
