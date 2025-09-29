@@ -218,10 +218,22 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   .site-nav { display: none; position: absolute; top: calc(var(--header-h)); right: 4%; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; flex-direction: column; gap: 8px; }
   .nav-toggle { display: inline-block; }
   .sp { display: inline; }
-  .footer-cta { grid-template-columns: 1fr; }
+  .footer-cta { grid-template-columns: 1fr 1fr; }
   .greeting-card { grid-template-columns: 1fr; }
   .greeting-photo { max-width: 360px; width: 100%; }
   .greeting-title { font-size: 1.25rem; }
   .logo { font-size: clamp(18px, 6vw, 26px); }
   .logo-img { height: 1.2em; }
+}
+
+/* Tablet: collapse 3-col grids to 2 cols */
+@media (max-width: 1024px){
+  .grid.three { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
+/* Phone: 1 column for 3-col grids and tighten spacing */
+@media (max-width: 600px){
+  .grid.three { grid-template-columns: 1fr; }
+  .hero { padding: 44px 0; }
+  .section { padding: 44px 0; }
 }
