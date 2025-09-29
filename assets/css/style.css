@@ -9,7 +9,7 @@
   --muted: #3f495a; /* 少し濃くしてコントラスト改善 */
   --card: #ffffff;
   --border: #e2e8f0;
-  --notice-h: 36px;
+  --notice-h: 0px; /* notice bar removed */
   --header-h: 64px;
   /* subtle section tints */
   --tint-1: rgba(31, 77, 58, 0.04); /* brand light tint */
