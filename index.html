@@ -14,6 +14,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/style.css" />
+    <style>
+      /* CTA tiles: use Mincho and thinner weight */
+      .footer-cta .cta-tile, .footer-cta .cta-label {
+        font-family: 'Noto Serif JP', 'Yu Mincho', '游明朝', 'Hiragino Mincho ProN', 'MS Mincho', serif;
+        font-weight: 400;
+      }
+      /* CTA tiles: slightly taller with subtle padding */
+      .footer-cta { padding: 0; gap: 0; }
+      .footer-cta .cta-tile { min-height: 64px; padding: 6px 8px; }
+      .footer-cta .cta-tile.line { border: 0; }
+      @media (max-width: 600px){
+        .footer-cta { padding: 0; }
+        .footer-cta .cta-tile { min-height: 58px; padding: 6px; }
+      }
+    </style>
   </head>
   <body>
     
@@ -39,8 +54,7 @@
     <main id="top">
       <section class="hero">
         <div class="container hero-inner">
-          <div class="badges">藤枝市｜福てらす墓園</div>
-          <h1>藤枝市｜福てらす墓園 — 後継ぎ不要の“永代供養つき”個別区画（樹木葬／家族墓）。</h1>
+          <h1>藤枝市｜福てらす墓園<br>後継ぎ不要の“永代供養つき”個別区画（樹木葬／家族墓）</h1>
           <p>子供に「迷惑をかけたくない」というお気持ちに、最林寺 福てらす墓園が寺院直営の安心でお応えします。</p>
           <p>永代供養付き樹木葬・家族墓をご紹介。</p>
           <p>ご希望の方にはご案内資料（郵送）もお届けいたします。</p>
@@ -422,8 +436,20 @@
     </footer>
 
     <div class="footer-cta">
-      <a href="#closing" class="btn primary">資料を受け取る（郵送）</a>
-      <a href="tel:0120955427" class="btn">電話する</a>
+      <a href="tel:0120955427" class="cta-tile phone">
+        <span class="cta-icon">☎</span>
+        <span class="cta-label">お電話で<br>お問合せ</span>
+      </a>
+      <a href="#closing" class="cta-tile booking">
+        <span class="cta-icon">🗓</span>
+        <span class="cta-label">資料請求<br>見学予約</span>
+      </a>
+      <a href="https://lin.ee/pLkXipI" target="_blank" rel="noopener" class="cta-tile line">
+        <span class="cta-icon" aria-hidden="true" style="border-radius:6px; background: transparent; padding: 0;">
+          <img src="./assets/images/LINE_Brand_icon.png" alt="LINE" style="width:100%; height:100%; display:block; object-fit:contain; border-radius:6px;">
+        </span>
+        <span class="cta-label">LINEで<br>お問合せ</span>
+      </a>
     </div>
 
     <script type="application/ld+json">
