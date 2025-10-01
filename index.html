@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
     <title>福てらす墓園 | 永代供養つき個別区画（樹木葬／家族墓）</title>
     <meta name="description" content="福てらす墓園の樹木葬・家族墓。後継ぎ不要の“永代供養つき”個別区画。資料請求（郵送）・見学予約はスマホでかんたん。" />
     <meta property="og:type" content="website">
@@ -14,28 +15,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/style.css" />
-    <style>
-      /* CTA tiles: use Mincho and thinner weight */
-      .footer-cta .cta-tile, .footer-cta .cta-label {
-        font-family: 'Noto Serif JP', 'Yu Mincho', '游明朝', 'Hiragino Mincho ProN', 'MS Mincho', serif;
-        font-weight: 400;
-      }
-      /* CTA tiles: slightly taller with subtle padding */
-      .footer-cta { padding: 0; gap: 0; }
-      .footer-cta .cta-tile { min-height: 64px; padding: 6px 8px; }
-      .footer-cta .cta-tile.line { border: 0; }
-      @media (max-width: 600px){
-        .footer-cta { padding: 0; }
-        .footer-cta .cta-tile { min-height: 58px; padding: 6px; }
-      }
-    </style>
   </head>
-  <body>
+  <body class="no-js">
     
     <header class="site-header">
       <div class="container flex between center">
         <a class="logo" href="#top"><img class="logo-img" src="./assets/images/【ロゴデータ】陽光マークのみ.png" alt="福てらす墓園のロゴ" /> 福てらす墓園</a>
-        <button id="navToggle" class="nav-toggle" aria-label="メニューを開閉">☰</button>
+        <button id="navToggle" class="nav-toggle" type="button" aria-controls="siteNav" aria-expanded="false">
+          <span aria-hidden="true">☰</span>
+          <span class="sr-only">メニューを開く</span>
+        </button>
         <nav id="siteNav" class="site-nav">
           <a href="#reasons">理由</a>
           <a href="#assurance">安心</a>
@@ -117,7 +106,7 @@
             </article>
           </div>
           <p class="note">詳細は見学時または<strong>ご案内資料（郵送）</strong>で丁寧にお伝えいたします。</p>
-          <div class="center">
+          <div class="center stack gap-sm">
             <a href="#closing" class="btn primary">資料を受け取る（郵送）</a>
             <a href="#visit" class="btn">見学日を選ぶ</a>
             <a class="link" href="tel:0120955427">福てらす墓園に電話する</a>
@@ -200,7 +189,7 @@
             </div>
           </div>
           <div class="visit-note"><span class="i" aria-hidden="true">i</span> 所要時間 最短30分｜持ち物不要</div>
-          <div class="center">
+          <div class="center stack gap-sm">
             <a href="#closing" class="btn primary">見学日を選ぶ</a>
             <a class="btn" href="tel:0120955427">電話する（0120-955-427）</a>
           </div>
@@ -249,7 +238,7 @@
           </div>
 
           <p class="note">電話・LINEで概算をお伝えします。「かたち・納骨人数・時期」の3点でご案内可能です。</p>
-          <div class="center">
+          <div class="center stack gap-sm">
             <a href="tel:0120955427" class="btn">電話で概算を聞く</a>
             <a href="https://lin.ee/pLkXipI" target="_blank" rel="noopener" class="btn">LINEで概算を聞く</a>
           </div>
@@ -268,7 +257,7 @@
             <figure class="card mini"><img src="./assets/images/福てらす墓園の永代供養塔前で読経する住職のイラスト＿ｈGemini_Generated_Image.webp" alt="永代供養塔と読経のイラスト" loading="lazy"></figure>
           </div>
           <p class="note">実際の明るさや雰囲気は、ぜひ見学でご確認ください。</p>
-          <div class="center">
+          <div class="center stack gap-sm">
             <a href="#visit" class="btn">見学で確かめる</a>
           </div>
         </div>
@@ -373,7 +362,7 @@
               </details>
             </div>
           </div>
-          <div class="center" style="margin-top: 10px;">
+          <div class="center stack gap-sm faq-actions">
             <a href="#closing" class="btn">資料請求</a>
             <a href="#visit" class="btn">見学予約</a>
           </div>
@@ -400,7 +389,7 @@
       <section id="closing" class="section contact">
         <div class="container">
           <h2>ご検討に役立つ資料を無料でお届けします</h2>
-          <form class="contact-form" onsubmit="return false;">
+          <form class="contact-form">
             <div class="grid two">
               <label>お名前<input type="text" placeholder="山田 太郎" required></label>
               <label>メール<input type="email" placeholder="mail@example.com" required></label>
@@ -416,11 +405,12 @@
               <label>電話番号<input type="tel" placeholder="090-1234-5678"></label>
             </div>
             <label>ご相談内容<textarea rows="4" placeholder="ご希望やご不明点をご記入ください"></textarea></label>
-            <div class="center">
+            <div class="form-actions stack gap-sm">
               <button class="btn primary" id="btnSubmit" type="submit">資料を受け取る（郵送）</button>
               <a class="btn" href="#visit">見学日を選ぶ</a>
-              <p class="form-note">受付：9:00–16:00（金曜定休）｜電話：0120-955-427｜LINE：<a href="https://lin.ee/pLkXipI" target="_blank" rel="noopener">https://lin.ee/pLkXipI</a></p>
             </div>
+            <p class="form-note">受付：9:00–16:00（金曜定休）｜電話：<a href="tel:0120955427">0120-955-427</a>｜LINE：<a href="https://lin.ee/pLkXipI" target="_blank" rel="noopener">https://lin.ee/pLkXipI</a></p>
+            <p class="form-status" id="formStatus" role="status" aria-live="polite" hidden></p>
           </form>
         </div>
       </section>
@@ -445,8 +435,8 @@
         <span class="cta-label">資料請求<br>見学予約</span>
       </a>
       <a href="https://lin.ee/pLkXipI" target="_blank" rel="noopener" class="cta-tile line">
-        <span class="cta-icon" aria-hidden="true" style="border-radius:6px; background: transparent; padding: 0;">
-          <img src="./assets/images/LINE_Brand_icon.png" alt="LINE" style="width:100%; height:100%; display:block; object-fit:contain; border-radius:6px;">
+        <span class="cta-icon" aria-hidden="true">
+          <img src="./assets/images/LINE_Brand_icon.png" alt="" />
         </span>
         <span class="cta-label">LINEで<br>お問合せ</span>
       </a>
@@ -465,6 +455,6 @@
     }
     </script>
 
-    <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/main.js" defer></script>
   </body>
 </html>
