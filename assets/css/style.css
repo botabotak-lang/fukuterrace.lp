@@ -300,7 +300,10 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   gap: 6px;
   background: rgba(250, 246, 239, 0.92);
   backdrop-filter: saturate(1.1) blur(8px);
-  padding: 6px;
+  padding: 0 6px;
+  --cta-label-size: 15px;
+  --cta-line-height: 1.2;
+  --cta-icon-size: calc(var(--cta-label-size) * var(--cta-line-height) * 2);
   border-top: 1px solid var(--border);
   z-index: 30;
 }
@@ -316,19 +319,18 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   gap: 6px;
   text-decoration: none !important;
   border-radius: 8px;
-  min-height: 64px;
   font-weight: 500;
   text-align: center;
-  padding: 6px 8px;
+  padding: 6px 10px;
 }
 .cta-tile .cta-icon {
-  width: 32px;
-  height: 32px;
+  width: var(--cta-icon-size);
+  height: var(--cta-icon-size);
   border-radius: 50%;
   display: grid;
   place-items: center;
   background: #fff;
-  font-size: 18px;
+  font-size: calc(var(--cta-label-size) * 1.1);
   line-height: 1;
 }
 .cta-tile .cta-icon img {
@@ -338,7 +340,7 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   object-fit: contain;
   border-radius: 6px;
 }
-.cta-tile .cta-label { display: grid; line-height: 1.15; font-size: 14px; }
+.cta-tile .cta-label { display: grid; line-height: var(--cta-line-height); font-size: var(--cta-label-size); }
 /* Variants */
 .cta-tile.phone { background: var(--brand); color: #fff; }
 .cta-tile.phone .cta-icon { color: var(--brand); background: #fff; }
@@ -356,10 +358,9 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
 .cta-tile:active { transform: translateY(1px); }
 /* Desktop: CTA button layout horizontal (icon left, text right) */
 @media (min-width: 821px){
-  .cta-tile { flex-direction: row; align-items: center; justify-content: center; gap: 10px; text-align: left; }
-  .cta-tile .cta-icon { width: 32px; height: 32px; }
-  /* Two-line label sits to the right; keep line-height so 2 lines ≒ 32px total height */
-  .cta-tile .cta-label { display: block; line-height: 1.15; font-size: 14px; }
+  .cta-tile { flex-direction: row; align-items: center; justify-content: center; gap: 12px; text-align: left; }
+  /* Two-line label sits to the right; keep line-height so 2 lines stays tidy */
+  .cta-tile .cta-label { display: block; }
 }
 /* gallery */
 .gallery-grid figure { margin: 0; }
@@ -409,8 +410,7 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   .grid.three { grid-template-columns: 1fr; }
   .hero { padding: 44px 0; }
   .section { padding: 44px 0; }
-  .footer-cta { padding: 4px; gap: 4px; }
-  .cta-tile { min-height: 58px; gap: 4px; padding: 6px; }
-  .cta-tile .cta-icon { width: 28px; height: 28px; font-size: 16px; }
-  .cta-tile .cta-label { font-size: 13px; }
+  .footer-cta { padding: 0 4px; gap: 4px; --cta-label-size: 14px; --cta-line-height: 1.25; --cta-icon-size: calc(var(--cta-label-size) * var(--cta-line-height) * 2); }
+  .cta-tile { gap: 4px; padding: 4px 8px; }
+  .cta-tile .cta-label { font-size: var(--cta-label-size); }
 }
