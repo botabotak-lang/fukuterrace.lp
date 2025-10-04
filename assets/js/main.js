@@ -5,7 +5,7 @@
   body.classList.add('has-js');
   const navToggle = document.getElementById('navToggle');
   const siteNav = document.getElementById('siteNav');
-  const srLabel = navToggle?.querySelector('.sr-only') || null;
+  const srLabel = navToggle ? navToggle.querySelector('.sr-only') : null;
   const mobileQuery = window.matchMedia('(max-width: 820px)');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -20,7 +20,10 @@
   };
 
   const closeNav = () => setNavState(false);
-  const toggleNav = () => setNavState(navToggle?.getAttribute('aria-expanded') !== 'true');
+  const toggleNav = () => {
+    const expanded = navToggle ? navToggle.getAttribute('aria-expanded') === 'true' : false;
+    setNavState(!expanded);
+  };
 
   if (navToggle && siteNav) {
     setNavState(false);
@@ -77,7 +80,7 @@
 
       event.preventDefault();
 
-      if (mobileQuery.matches && siteNav?.contains(anchor)) {
+      if (mobileQuery.matches && siteNav && siteNav.contains(anchor)) {
         closeNav();
       }
 
