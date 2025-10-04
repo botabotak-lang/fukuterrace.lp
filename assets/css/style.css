@@ -13,20 +13,25 @@
   --border: #d8e4dd;
   --notice-h: 0px; /* notice bar removed */
   --header-h: 64px;
+  --footer-cta-offset: 120px;
   /* subtle section tints */
   --tint-1: rgba(47, 102, 82, 0.08); /* brand light tint */
   --tint-2: #eef4f1;                /* neutral grey tint */
   --tint-3: #ffffff;                /* white */
 }
 * { box-sizing: border-box; }
-html, body { height: 100%; overflow-x: hidden; }
+html { min-height: 100%; overflow-x: hidden; }
 body {
   margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: 'Noto Sans JP', system-ui, -apple-system, Segoe UI, Roboto, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
   line-height: 1.7;
   font-size: clamp(18px, 1.25vw, 20px);
+  padding-bottom: var(--footer-cta-offset);
+  padding-bottom: calc(var(--footer-cta-offset) + env(safe-area-inset-bottom));
 }
 img { max-width: 100%; display: block; }
 .container { width: min(1120px, 92%); margin: 0 auto; }
@@ -600,18 +605,24 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
 
 /* Sticky footer CTA: 3 tiles, compact height */
 .footer-cta {
-  position: sticky;
-  bottom: 0; left: 0; right: 0;
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 6px;
   background: rgba(240, 245, 242, 0.94);
   backdrop-filter: saturate(1.1) blur(8px);
-  padding: 0 6px;
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
   --cta-label-size: 15px;
   --cta-line-height: 1.2;
   --cta-icon-size: calc(var(--cta-label-size) * var(--cta-line-height) * 2);
   border-top: 1px solid var(--border);
-  z-index: 30;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -12px 36px rgba(18, 50, 38, 0.18);
+  z-index: 100;
 }
 .footer-cta .cta-tile, .footer-cta .cta-label {
   font-family: 'Noto Serif JP', 'Yu Mincho', '游明朝', 'Hiragino Mincho ProN', 'MS Mincho', serif;
@@ -819,7 +830,15 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   .section-cta .btn { width: 100%; }
   .offer-card { padding: 24px 20px; }
   .offer-grid { gap: 20px; }
-  .footer-cta { padding: 0 4px; gap: 4px; --cta-label-size: 14px; --cta-line-height: 1.25; --cta-icon-size: calc(var(--cta-label-size) * var(--cta-line-height) * 2); }
+  :root { --footer-cta-offset: 108px; }
+  .footer-cta {
+    padding: 8px 12px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    gap: 4px;
+    --cta-label-size: 14px;
+    --cta-line-height: 1.25;
+    --cta-icon-size: calc(var(--cta-label-size) * var(--cta-line-height) * 2);
+  }
   .cta-tile { gap: 4px; padding: 4px 8px; }
   .cta-tile .cta-label { font-size: var(--cta-label-size); }
   .site-footer .container { flex-direction: column; align-items: center; gap: 12px; text-align: center; }
