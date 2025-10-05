@@ -19,6 +19,54 @@
     body.classList.toggle('nav-open', expanded);
   };
 
+  // Ensure the viewport is anchored to the left edge when horizontal scrolling is disabled.
+  // DevTools device emulation can keep a residual scrollLeft; harden with multi-attempt resets.
+  const resetHScrollOnce = () => {
+    // snap window first
+    if (window.scrollX !== 0) {
+      try { window.scrollTo({ left: 0, top: window.scrollY, behavior: 'instant' }); }
+      catch { window.scrollTo(0, window.scrollY); }
+    }
+    // then both scrolling roots
+    document.documentElement.scrollLeft = 0;
+    document.body.scrollLeft = 0;
+  };
+  const resetHScroll = () => {
+    // run a few times over time and frames to defeat late layout shifts
+    resetHScrollOnce();
+    requestAnimationFrame(() => {
+      resetHScrollOnce();
+      setTimeout(resetHScrollOnce, 50);
+      setTimeout(resetHScrollOnce, 200);
+    });
+  };
+  const hookLeftAnchor = () => {
+    resetHScroll();
+    // also repeat briefly after load to defeat late layout
+    let attempts = 0;
+    const id = setInterval(() => {
+      resetHScrollOnce();
+      if (++attempts > 15) clearInterval(id); // ~1s @ 66ms
+    }, 66);
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hookLeftAnchor, { once: true });
+  } else {
+    hookLeftAnchor();
+  }
+  window.addEventListener('resize', resetHScroll);
+  window.addEventListener('orientationchange', resetHScroll);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) resetHScroll(); });
+  // If any horizontal scroll sneaks in, snap it back while preserving vertical position
+  window.addEventListener('scroll', () => {
+    if (window.scrollX !== 0) {
+      try { window.scrollTo({ left: 0, top: window.scrollY, behavior: 'instant' }); }
+      catch { window.scrollTo(0, window.scrollY); }
+      document.documentElement.scrollLeft = 0;
+      document.body.scrollLeft = 0;
+    }
+  }, { passive: true });
+
   const closeNav = () => setNavState(false);
   const toggleNav = () => {
     const expanded = navToggle ? navToggle.getAttribute('aria-expanded') === 'true' : false;
