@@ -609,12 +609,16 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  max-width: 100vw;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   gap: 6px;
   background: rgba(240, 245, 242, 0.94);
   backdrop-filter: saturate(1.1) blur(8px);
-  padding: 10px 16px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  padding: 8px 16px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
   --cta-label-size: 15px;
   --cta-line-height: 1.2;
@@ -832,6 +836,12 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   .offer-grid { gap: 20px; }
   :root { --footer-cta-offset: 108px; }
   .footer-cta {
+    width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
     padding: 8px 12px;
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
     gap: 4px;
