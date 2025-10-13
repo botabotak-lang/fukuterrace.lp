@@ -388,11 +388,30 @@ iframe, img { max-width: 100%; height: auto; display: block; }
 .plans { background: var(--tint-3); }
 .visit-flow { background: var(--tint-2); }
 .cost { background: var(--tint-3); }
+.overview { background: var(--tint-1); }
 .gallery { background: var(--tint-2); }
 .access { background: var(--tint-3); }
 .faq { background: var(--tint-2); }
 .greeting { background: var(--tint-3); }
 .contact { background: var(--tint-1); }
+
+.overview-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin-top: 32px;
+}
+.overview-card {
+  display: grid;
+  gap: 8px;
+}
+.overview-card h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--brand-600);
+}
+.overview-card p {
+  margin: 0;
+  color: var(--muted);
+}
 
 /* Lists */
 .list { padding-left: 18px; }
