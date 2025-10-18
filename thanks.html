@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お問合せありがとうございます | 福てらす霊園</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.thanks {
+      background-color: #fff;
+      font-family: "Noto Sans JP", sans-serif;
+      color: #333;
+      text-align: center;
+      line-height: 1.9;
+      padding: 40px 20px 100px;
+    }
+
+    .thanks main {
+      width: min(100%, 720px);
+      margin: 0 auto;
+    }
+
+    .thanks img {
+      max-width: 520px;
+      width: 90%;
+      height: auto;
+      margin: 0 auto 40px;
+      border-radius: 6px;
+    }
+
+    .thanks h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #3a5e3a;
+      margin: 0 auto 20px;
+      max-width: 720px;
+      text-align: left;
+    }
+
+    .thanks p {
+      margin: 0 0 30px;
+      text-align: left;
+      font-size: 1rem;
+      color: #555;
+      line-height: 1.9;
+    }
+
+    .contact-box,
+    .address-box {
+      background: #f9f9f9;
+      border-radius: 8px;
+      display: inline-block;
+      padding: 20px 40px;
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #333;
+      text-align: center;
+    }
+
+    .address-box {
+      text-align: center;
+    }
+
+    .address-box img {
+      max-width: 180px;
+      width: 80%;
+      height: auto;
+      display: block;
+      margin: 0 auto 12px;
+    }
+
+    .address-box .address-text {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    .address-box .address-line {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .text-block {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .contact-box svg {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 8px;
+      fill: #3a5e3a;
+    }
+
+    .thanks .tel {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #3a5e3a;
+      margin: 10px 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .thanks .info {
+      font-size: 0.9rem;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    .thanks a.btn {
+      display: inline-block;
+      margin-top: 40px;
+      background: #5a8c5a;
+      color: #fff;
+      padding: 14px 40px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .thanks a.btn:hover {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 640px) {
+      .thanks p { font-size: 0.95rem; }
+      .thanks .tel { font-size: 1.4rem; }
+    }
+
+    @media (min-width: 1024px) {
+      .thanks main {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 140px);
+      }
+
+      .text-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .text-block p {
+        width: 100%;
+      }
+
+      .contact-box,
+      .address-box {
+        margin: 20px auto 0;
+      }
+
+      .thanks main .btn {
+        margin-top: auto;
+        align-self: center;
+      }
+    }
+  </style>
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <!-- Google 広告コンバージョンタグ -->
+  <script>
+    gtag('event', 'conversion', {
+      'send_to': 'AW-XXXXXXXXX/xxxxxxx'
+    });
+  </script>
+</head>
+
+<body class="thanks">
+  <main>
+    <img src="assets/images/お申込みありがとうございます.webp" alt="お問合せありがとうございます">
+
+    <h1>お申込みいただきまして、ありがとうございました。</h1>
+
+    <div class="text-block">
+      <p>
+        担当者より折り返しご連絡いたしますので、今しばらくお待ちください。<br><br>
+        まずは自動返信メールがまもなく届きますので、ご確認のほどよろしくお願いいたします。<br>
+        もしメールが届いていない場合は、「迷惑メールフォルダに届いている」か、<br>
+        「ご入力いただいたメールアドレスが誤っている」可能性がございます。<br><br>
+        迷惑メールフォルダに自動返信メールが届いていない場合、<br>
+        「ご入力いただいたメールアドレスが誤っている」可能性がございますので、<br>
+        その際はお電話またはメールフォームより再度お問合せください。
+      </p>
+
+      <div class="contact-box">
+        <a class="tel" href="tel:0120955427">📞 0120-955-427</a>
+        <div class="info">受付時間　9:00 - 16:00 ／ 定休日　毎週金曜日</div>
+      </div>
+
+      <div class="address-box">
+        <img src="assets/images/【ロゴデータ】陽光マーク＋横に名前.png" alt="福てらす墓園のロゴ">
+        <div class="address-text">
+          <span class="address-line">〒426-0201 静岡県藤枝市下藪田３２２</span>
+          （福田山 最林寺敷地内）
+        </div>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn">トップページへ戻る</a>
+  </main>
+</body>
+</html>
