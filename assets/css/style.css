@@ -394,6 +394,75 @@ iframe, img { max-width: 100%; height: auto; display: block; }
 .faq { background: var(--tint-2); }
 .greeting { background: var(--tint-3); }
 .contact { background: var(--tint-1); }
+.contact-form-section {
+  padding: 60px 20px;
+  background-color: #e6efe8;
+}
+.contact-form-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+.contact-form-title {
+  margin: 0;
+  font-size: clamp(28px, 5.8vw, 36px);
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--brand-700, var(--brand-600));
+}
+.contact-form-title span {
+  display: block;
+}
+.contact-form-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  background: rgba(31, 77, 58, 0.12);
+  color: var(--brand-700, var(--brand-600));
+}
+.contact-form-wrapper {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  height: 1750px;
+}
+.contact-form-wrapper iframe {
+  display: block;
+  width: 100%;
+  min-height: 2650px;
+  border: 0;
+  background: #f9fdf9;
+  margin-top: -95px;
+}
+.contact-form-note {
+  margin: 32px auto 0;
+  max-width: 640px;
+  padding: 24px 28px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text);
+  text-align: left;
+}
+.contact-form-note br {
+  display: block;
+  margin-bottom: 8px;
+  content: "";
+}
 
 .overview-grid {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
