@@ -67,6 +67,54 @@
     }
   }, { passive: true });
 
+  // Track touch gestures to cancel horizontal pans on mobile devices.
+  let touchLockDirection;
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  document.addEventListener('touchstart', (event) => {
+    if (!mobileQuery.matches) return;
+    if (event.touches.length !== 1) {
+      touchLockDirection = undefined;
+      return;
+    }
+    const touch = event.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    touchLockDirection = undefined;
+  }, { passive: true, capture: true });
+
+  document.addEventListener('touchmove', (event) => {
+    if (!mobileQuery.matches) return;
+    if (event.touches.length !== 1) {
+      touchLockDirection = undefined;
+      return;
+    }
+    const touch = event.touches[0];
+    const deltaX = Math.abs(touch.clientX - touchStartX);
+    const deltaY = Math.abs(touch.clientY - touchStartY);
+
+    if (touchLockDirection === undefined) {
+      const threshold = 6;
+      if (deltaX <= threshold && deltaY <= threshold) return;
+      if (deltaX > deltaY && deltaX > threshold) {
+        touchLockDirection = 'horizontal';
+      } else {
+        touchLockDirection = 'vertical';
+      }
+    }
+
+    if (touchLockDirection === 'horizontal' && event.cancelable) {
+      event.preventDefault();
+      if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+      resetHScrollOnce();
+    }
+  }, { passive: false, capture: true });
+
+  const clearTouchLock = () => { touchLockDirection = undefined; };
+  document.addEventListener('touchend', clearTouchLock, { passive: true, capture: true });
+  document.addEventListener('touchcancel', clearTouchLock, { passive: true, capture: true });
+
   const closeNav = () => setNavState(false);
   const toggleNav = () => {
     const expanded = navToggle ? navToggle.getAttribute('aria-expanded') === 'true' : false;

@@ -555,6 +555,7 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
 
 /* Footer */
 .site-footer { background: var(--card); border-top: 1px solid var(--border); padding: 14px 0; }
+.site-footer .logo.small .logo-img { height: 48px; width: auto; }
 .site-footer .to-top { text-decoration: none; color: var(--text); }
 .foot-left { display: inline-flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .foot-info { display: inline-flex; align-items: center; gap: 18px; font-size: 0.95rem; color: var(--muted); }
@@ -919,6 +920,10 @@ html, body { overflow-x: hidden !important; }
 }
 /* emulation/gesture guard (2025-10-05) */
 html, body { overscroll-behavior-x: none; touch-action: pan-y; max-width: 100%; }
+
+@media (max-width: 820px){
+  body, body * { touch-action: pan-y !important; }
+}
 
 /* mobile: prevent long footer info from widening page */
 @media (max-width: 820px){
