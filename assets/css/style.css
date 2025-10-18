@@ -388,7 +388,7 @@ iframe, img { max-width: 100%; height: auto; display: block; }
 .plans { background: var(--tint-3); }
 .visit-flow { background: var(--tint-2); }
 .cost { background: var(--tint-3); }
-.overview { background: var(--tint-1); }
+.overview { background: var(--tint-2); }
 .gallery { background: var(--tint-2); }
 .access { background: var(--tint-3); }
 .faq { background: var(--tint-2); }
