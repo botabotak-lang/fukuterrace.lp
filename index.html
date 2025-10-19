@@ -94,8 +94,8 @@
           z-index: -1;
         }
         #siteNav.site-nav a.btn::before {
-          background: linear-gradient(135deg, var(--brand) 0%, var(--brand-600) 100%);
-          box-shadow: 0 16px 30px rgba(36,81,67,0.25);
+          background: linear-gradient(135deg, var(--cta) 0%, var(--cta-hover) 100%);
+          box-shadow: 0 16px 30px rgba(221,118,16,0.28);
         }
         #siteNav.site-nav a.btn { color: #fff; }
       }
@@ -180,7 +180,7 @@
 
 
 
-          <a class="btn primary small" href="#closing">見学予約</a>
+          <a class="btn cta small" href="#closing">見学予約</a>
 
 
 
@@ -224,7 +224,10 @@
 
 
 
-            <p class="hero-lead">後継ぎ不要の安心を、寺院直営の永代供養付き個別区画でご案内します。</p>
+            <p class="hero-lead"><span class="hero-highlight">後継ぎ不要の安心を</span><br>寺院直営の永代供養付き個別区画でご案内します。</p>
+            <figure class="hero-image">
+              <img src="./assets/images/墓園の上空写真MAVICMINI-3-scaled.webp" alt="福てらす墓園の上空からの全景写真">
+            </figure>
 
 
 
@@ -264,15 +267,11 @@
 
 
 
-              <a class="link" href="tel:0120955427">電話：0120-955-427</a>
+              <a class="btn primary small" href="tel:0120955427">電話：0120-955-427</a>
 
 
 
-              <span class="sep">｜</span>
-
-
-
-              <a class="link" href="https://lin.ee/pLkXipI" target="_blank" rel="noopener">LINEで質問する</a>
+              <a class="btn primary small" href="https://lin.ee/pLkXipI" target="_blank" rel="noopener">LINEで質問する</a>
             
             
 
@@ -306,7 +305,7 @@
 
 
 
-              <p class="inline-cta"><a href="tel:0120955427">道順を電話で聞く</a></p>
+              <p class="inline-cta"><a href="#access">アクセス方法を詳しく見る</a></p>
 
 
 
@@ -346,7 +345,7 @@
 
 
 
-              <p class="inline-cta"><a href="#greeting">住職挨拶を読む</a>／<a href="tel:0120955427">電話で相談</a></p>
+              <p class="inline-cta"><a href="#greeting">住職挨拶を読む</a></p>
 
 
 
@@ -466,7 +465,7 @@
 
 
 
-            <a class="link" href="tel:0120955427">福てらす墓園に電話する</a>
+            <a class="btn primary" href="tel:0120955427">福てらす墓園に電話する</a>
 
 
 
@@ -533,7 +532,7 @@
 
 
 
-              <a href="#closing" class="btn primary block">この形で資料を受け取る</a>
+              <a href="#closing" class="btn primary block">樹木葬の資料を受け取る</a>
 
 
 
@@ -577,7 +576,7 @@
 
 
 
-              <a href="#closing" class="btn primary block">この形で資料を受け取る</a>
+              <a href="#closing" class="btn primary block">家族墓の資料を受け取る</a>
 
 
 
@@ -801,7 +800,7 @@
 
 
 
-            <a class="btn" href="tel:0120955427">電話する（0120-955-427）</a>
+            <a class="btn primary" href="tel:0120955427">電話する（0120-955-427）</a>
 
 
 
@@ -977,206 +976,41 @@
 
 
 
-          <div class="cost-table-wrap">
-
-
-
-
-
-
-
-            <table class="cost-table">
-
-
-
-
-
-
-
-              <thead>
-
-
-
-
-
-
-
-                <tr>
-
-
-
-
-
-
-
-                  <th>種類</th>
-
-
-
-
-
-
-
-                  <th>ベース価格</th>
-
-
-
-
-
-
-
-                  <th>管理費</th>
-
-
-
-
-
-
-
-                  <th>最大人数（1区画）</th>
-
-
-
-
-
-
-
-                </tr>
-
-
-
-
-
-
-
-              </thead>
-
-
-
-
-
-
-
-              <tbody>
-
-
-
-
-
-
-
-                <tr>
-
-
-
-
-
-
-
-                  <th>樹木葬</th>
-
-
-
-
-
-
-
-                  <td data-label="ベース価格"><span>50万円〜／65万円〜</span></td>
-
-
-
-
-
-
-
-                  <td data-label="管理費"><span>年2,000円</span></td>
-
-
-
-
-
-
-
-                  <td data-label="最大人数（1区画）"><span>2名まで</span></td>
-
-
-
-
-
-
-
-                </tr>
-
-
-
-
-
-
-
-                <tr>
-
-
-
-
-
-
-
-                  <th>家族墓</th>
-
-
-
-
-
-
-
-                  <td data-label="ベース価格"><span>85万円〜／100万円〜</span></td>
-
-
-
-
-
-
-
-                  <td data-label="管理費"><span>年3,000円</span></td>
-
-
-
-
-
-
-
-                  <td data-label="最大人数（1区画）"><span>4名まで</span></td>
-
-
-
-
-
-
-
-                </tr>
-
-
-
-
-
-
-
-              </tbody>
-
-
-
-
-
-
-
-            </table>
-
-
-
-
-
-
-
+          <div class="cost-plan-grid">
+            <article class="cost-plan cost-plan--tree">
+              <h3 class="cost-plan__title"><span>樹木葬</span></h3>
+              <dl class="cost-plan__list">
+                <div class="cost-plan__row">
+                  <dt>ベース価格</dt>
+                  <dd>50万円〜／65万円〜</dd>
+                </div>
+                <div class="cost-plan__row">
+                  <dt>管理費</dt>
+                  <dd>年2,000円</dd>
+                </div>
+                <div class="cost-plan__row">
+                  <dt>最大人数（1区画）</dt>
+                  <dd>2名まで</dd>
+                </div>
+              </dl>
+            </article>
+            <article class="cost-plan cost-plan--family">
+              <h3 class="cost-plan__title"><span>家族墓</span></h3>
+              <dl class="cost-plan__list">
+                <div class="cost-plan__row">
+                  <dt>ベース価格</dt>
+                  <dd>85万円〜／100万円〜</dd>
+                </div>
+                <div class="cost-plan__row">
+                  <dt>管理費</dt>
+                  <dd>年3,000円</dd>
+                </div>
+                <div class="cost-plan__row">
+                  <dt>最大人数（1区画）</dt>
+                  <dd>4名まで</dd>
+                </div>
+              </dl>
+            </article>
           </div>
 
 
@@ -1209,7 +1043,7 @@
 
 
 
-            <a href="tel:0120955427" class="btn">電話で概算を聞く</a>
+            <a href="tel:0120955427" class="btn primary small">電話で概算を聞く</a>
 
 
 
@@ -1217,7 +1051,7 @@
 
 
 
-            <a href="https://lin.ee/pLkXipI" target="_blank" rel="noopener" class="btn">LINEで概算を聞く</a>
+            <a href="https://lin.ee/pLkXipI" target="_blank" rel="noopener" class="btn primary small">LINEで概算を聞く</a>
 
 
 
@@ -2228,30 +2062,6 @@
 
 
             </div>
-
-
-
-
-
-
-
-          </div>
-
-
-
-
-
-
-
-          <div class="center stack gap-sm faq-actions">
-
-
-
-
-
-
-
-            <a href="#closing" class="btn">見学予約</a>
 
 
 
