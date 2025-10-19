@@ -66,7 +66,7 @@
     <style>
       /* Mobile-only: keep nav link text horizontal and unwrapped */
       @media (max-width: 820px){
-        .site-nav a { white-space: nowrap; word-break: keep-all; writing-mode: horizontal-tb; text-orientation: mixed; }
+        .site-nav a { white-space: normal; word-break: normal; overflow-wrap: anywhere; writing-mode: horizontal-tb; text-orientation: mixed; }
         .site-nav.is-open { display: flex !important; }
         /* Centered mobile menu (keeps card design, responsive max width) */
         #siteNav.site-nav {
@@ -132,58 +132,17 @@
 
 
         <nav id="siteNav" class="site-nav">
-
-
-
-          <a href="#reasons">理由</a>
-
-
-
-          <a href="#offerings">供養プラン</a>
-
-
-
-          <a href="#assurance">安心</a>
-
-
-
-          <a href="#plans">かたち</a>
-
-
-
-          <a href="#visit">見学</a>
-
-
-
-          <a href="#cost">費用</a>
-
-
-
-
-
-
-          <a href="#gallery">写真</a>
-
-
-
-          <a href="#access">アクセス</a>
-
-
-
-          <a href="#faq">FAQ</a>
-
-
-
-          <a href="#greeting">住職挨拶</a>
-
-          <a href="#overview">墓園概要</a>
-
-
-
-          <a class="btn cta small" href="#closing">見学予約</a>
-
-
-
+          <a href="#reasons"><span class="label-pc">理由</span><span class="label-sp">選ばれる理由</span></a>
+          <a href="#assurance"><span class="label-pc">安心</span><span class="label-sp">永代供養つき個別区画の3つの安心</span></a>
+          <a href="#plans"><span class="label-pc">かたち</span><span class="label-sp">選べる2つのかたち</span></a>
+          <a href="#visit"><span class="label-pc">見学</span><span class="label-sp">見学の流れ</span></a>
+          <a href="#cost"><span class="label-pc">費用</span><span class="label-sp">費用の考え方</span></a>
+          <a href="#gallery"><span class="label-pc">写真</span><span class="label-sp">園内の様子</span></a>
+          <a href="#access"><span class="label-pc">アクセス</span><span class="label-sp">アクセス</span></a>
+          <a href="#faq"><span class="label-pc">FAQ</span><span class="label-sp">よくあるご質問</span></a>
+          <a href="#greeting"><span class="label-pc">住職挨拶</span><span class="label-sp">住職ご挨拶</span></a>
+          <a href="#overview"><span class="label-pc">墓園概要</span><span class="label-sp">墓園概要</span></a>
+          <a class="btn cta small" href="#closing"><span class="label-pc">見学予約</span><span class="label-sp">無料見学予約フォーム（資料請求もこちらから）</span></a>
         </nav>
 
 
@@ -1278,6 +1237,9 @@
 
 
           <h2>アクセス</h2>
+          <figure class="access-map-visual">
+            <img src="assets/images/福てらす墓園の案内用マップ.webp" alt="福てらす墓園の案内用マップ">
+          </figure>
 
 
 
