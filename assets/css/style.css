@@ -60,6 +60,24 @@ iframe, img { max-width: 100%; height: auto; display: block; }
   border: 0;
 }
 
+/* Scroll reveal animation */
+.has-js .reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+  will-change: opacity, transform;
+}
+.has-js .reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .has-js .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Layout helpers */
 .stack {
   display: flex;

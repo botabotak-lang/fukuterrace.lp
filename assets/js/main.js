@@ -201,4 +201,66 @@
     });
   });
 
+  // Scroll-triggered reveal animations
+  const revealSelectors = [
+    'section',
+    '.card',
+    '.hero-inner > *',
+    '.site-footer .container',
+    '.footer-cta',
+    '.footer-cta .cta-tile'
+  ];
+  const revealTargets = Array.from(
+    document.querySelectorAll(revealSelectors.join(', '))
+  ).filter((element, index, array) => array.indexOf(element) === index);
+
+  if (revealTargets.length) {
+    revealTargets.forEach((element) => element.classList.add('reveal-on-scroll'));
+    const markVisible = (element) => element.classList.add('is-visible');
+
+    if (prefersReducedMotion.matches || typeof IntersectionObserver === 'undefined') {
+      revealTargets.forEach(markVisible);
+    } else {
+      let viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+      const updateViewportHeight = () => {
+        viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+      };
+      window.addEventListener('resize', updateViewportHeight);
+      window.addEventListener('orientationchange', updateViewportHeight);
+
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            markVisible(entry.target);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -5% 0px'
+      });
+
+      revealTargets.forEach((element) => {
+        const rect = element.getBoundingClientRect();
+        const alreadyVisible = rect.top <= viewportHeight * 0.9 && rect.bottom >= 0;
+        if (alreadyVisible) {
+          markVisible(element);
+        } else {
+          observer.observe(element);
+        }
+      });
+
+      const handleMotionChange = (event) => {
+        if (!event.matches) return;
+        revealTargets.forEach(markVisible);
+        observer.disconnect();
+      };
+      if (typeof prefersReducedMotion.addEventListener === 'function') {
+        prefersReducedMotion.addEventListener('change', handleMotionChange);
+      } else if (typeof prefersReducedMotion.addListener === 'function') {
+        prefersReducedMotion.addListener(handleMotionChange);
+      }
+    }
+  }
+
 })();
