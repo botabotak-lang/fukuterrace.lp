@@ -1089,8 +1089,8 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   .greeting-card { grid-template-columns: 1fr; }
   .greeting-photo { max-width: 360px; width: 100%; }
   .greeting-title { font-size: 1.5rem; }
-  .logo { font-size: clamp(18px, 6vw, 26px); }
-  .logo-img { height: 1.2em; }
+  .logo { font-size: clamp(19px, 6vw, 28px); }
+  .logo-img { height: 1.90em; }
   .hero { padding: 72px 0 64px; }
   .hero-inner { grid-template-columns: 1fr; gap: 36px; }
   .hero-media { order: -1; }
