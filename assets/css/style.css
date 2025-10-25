@@ -166,6 +166,12 @@ iframe, img { max-width: 100%; height: auto; display: block; }
   border-color: var(--primary);
   box-shadow: 0 12px 24px rgba(89, 193, 53, 0.22);
 }
+.btn.cta {
+  background: var(--cta);
+  color: #fff;
+  border-color: var(--cta);
+  box-shadow: 0 12px 24px rgba(246, 139, 31, 0.24);
+}
 .btn.primary:hover {
   background: var(--primary-hover);
   border-color: var(--primary-hover);
