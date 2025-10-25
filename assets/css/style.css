@@ -551,7 +551,7 @@ iframe, img { max-width: 100%; height: auto; display: block; }
   background-color: #e6efe8;
 }
 .contact-form-container {
-  max-width: 1120px;
+  max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -583,7 +583,7 @@ iframe, img { max-width: 100%; height: auto; display: block; }
 }
 .contact-form-wrapper {
   width: 100%;
-  max-width: 1040px;
+  max-width: 1500px;
   margin: 0 auto;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
   border-radius: 20px;
@@ -593,7 +593,7 @@ iframe, img { max-width: 100%; height: auto; display: block; }
 .contact-form-wrapper iframe {
   display: block;
   width: 100%;
-  height: 1480px;
+  height: 2100px;
   border: 0;
   background: #f9fdf9;
   margin-top: 0;
