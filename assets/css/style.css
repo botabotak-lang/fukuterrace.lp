@@ -184,13 +184,31 @@ iframe, img { max-width: 100%; height: auto; display: block; }
 }
 .btn.small { padding: 8px 14px; font-size: 15px; }
 .btn.block { display: block; width: 100%; text-align: center; }
-.btn.cta {
-  padding: 14px 28px;
-  font-size: 18px;
-  background: var(--cta);
+.cta-label {
+  display: block;
+  line-height: 0.9;
+  text-align: center;
+  margin: -4px 0;
+  padding: 1px 0;
+}
+
+/* LINEボタンの行間調整 */
+.fixed-cta .cta-label {
+  line-height: 0.75;
+  margin: -6px 0 -7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.btn.fixed-cta {
+  padding: 8px 16px;
+  min-height: 54px;
+  background: transparent;
   color: #fff;
-  border-color: var(--cta);
-  box-shadow: 0 12px 24px rgba(246, 139, 31, 0.22);
+  border: 1px solid #06C755;
+  box-shadow: none;
 }
 .btn.cta:hover {
   background: var(--cta-hover);
@@ -904,19 +922,11 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   gap: 6px;
-  background: rgba(240, 245, 242, 0.94);
-  backdrop-filter: saturate(1.1) blur(8px);
+  background: transparent;
+  backdrop-filter: none;
   box-sizing: border-box;
-  overflow-x: hidden;
-  padding: 8px 16px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  --cta-label-size: 15px;
-  --cta-line-height: 1.2;
-  --cta-icon-size: calc(var(--cta-label-size) * var(--cta-line-height) * 2);
-  border-top: 1px solid var(--border);
-  border-radius: 18px 18px 0 0;
-  box-shadow: 0 -12px 36px rgba(18, 50, 38, 0.18);
   z-index: 100;
+  padding: 12px 16px;
 }
 .footer-cta .cta-tile, .footer-cta .cta-label {
   font-family: 'Noto Serif JP', 'Yu Mincho', '貂ｸ譏取悃', 'Hiragino Mincho ProN', 'MS Mincho', serif;
