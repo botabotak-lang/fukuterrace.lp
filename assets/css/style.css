@@ -194,12 +194,14 @@ iframe, img { max-width: 100%; height: auto; display: block; }
 
 /* LINEボタンの行間調整 */
 .fixed-cta .cta-label {
-  line-height: 0.75;
-  margin: -6px 0 -7px;
+  line-height: 0.6;
+  margin: -8px 0 -9px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-height: 100%;
+  transform: translateY(-1px);
+  font-size: 0.7em;
 }
 
 .btn.fixed-cta {
@@ -1150,7 +1152,7 @@ a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underli
     gap: 4px;
     --cta-label-size: 14px;
     --cta-line-height: 1.25;
-    --cta-icon-size: calc(var(--cta-label-size) * var(--cta-line-height) * 2);
+    --cta-icon-size: calc(var(--cta-label-size) * var(--cta-line-height) * 1.7);
   }
   .cta-tile { gap: 4px; padding: 4px 8px; }
   .cta-tile .cta-label { font-size: var(--cta-label-size); }
