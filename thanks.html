@@ -110,25 +110,19 @@
       white-space: nowrap;
     }
 
-    .thanks a.btn {
-      display: inline-block;
-      margin-top: 40px;
-      background: #5a8c5a;
-      color: #fff;
-      padding: 14px 40px;
-      border-radius: 40px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    .thanks a.btn:hover {
-      opacity: 0.85;
-    }
-
     @media (max-width: 640px) {
       .thanks p { font-size: 0.95rem; }
       .thanks .tel { font-size: 1.4rem; }
+      .contact-box,
+      .address-box {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-left: 0;
+        margin-right: 0;
+        padding: 20px 24px;
+        box-sizing: border-box;
+      }
     }
 
     @media (min-width: 1024px) {
@@ -151,11 +145,6 @@
       .contact-box,
       .address-box {
         margin: 20px auto 0;
-      }
-
-      .thanks main .btn {
-        margin-top: auto;
-        align-self: center;
       }
     }
   </style>
@@ -207,8 +196,6 @@
         </div>
       </div>
     </div>
-
-    <a href="https://lp.fukuterrace.jp/" class="btn">トップページへ戻る</a>
   </main>
 </body>
 </html>
