@@ -218,8 +218,9 @@ iframe, img { max-width: 100%; height: auto; display: block; }
   box-shadow: 0 8px 18px rgba(2, 96, 46, 0.34);
 }
 .btn.line-cta .btn-icon {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -228,6 +229,8 @@ iframe, img { max-width: 100%; height: auto; display: block; }
   display: block;
   width: 100%;
   height: 100%;
+  max-width: 24px;
+  max-height: 24px;
   object-fit: contain;
 }
 .btn.primary.plan-cta {

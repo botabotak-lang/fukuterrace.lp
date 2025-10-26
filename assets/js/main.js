@@ -206,9 +206,7 @@
     'section',
     '.card',
     '.hero-inner > *',
-    '.site-footer .container',
-    '.footer-cta',
-    '.footer-cta .cta-tile'
+    '.site-footer .container'
   ];
   const revealTargets = Array.from(
     document.querySelectorAll(revealSelectors.join(', '))
