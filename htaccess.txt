@@ -1,0 +1,12 @@
+# ===== HTTPS 強制リダイレクト（lp.fukuterrace.jp 用） =====
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # http → https
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # wwwを除外したい場合（任意）
+  RewriteCond %{HTTP_HOST} ^www\.lp\.fukuterrace\.jp$ [NC]
+  RewriteRule ^ https://lp.fukuterrace.jp%{REQUEST_URI} [L,R=301]
+</IfModule>
