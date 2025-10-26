@@ -199,8 +199,11 @@ iframe, img { max-width: 100%; height: auto; display: block; }
   box-shadow: 0 8px 18px rgba(17, 40, 32, 0.36);
 }
 .btn.phone-cta .btn-icon {
-  font-size: 1.1em;
+  font-size: 1.35em;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .btn.primary.line-cta {
   background: #06C755;
@@ -218,17 +221,20 @@ iframe, img { max-width: 100%; height: auto; display: block; }
   box-shadow: 0 8px 18px rgba(2, 96, 46, 0.34);
 }
 .btn.line-cta .btn-icon {
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 .btn.line-cta .btn-icon img {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 78%;
+  height: 78%;
   max-width: 24px;
   max-height: 24px;
   object-fit: contain;
