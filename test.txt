@@ -1,3 +1,0 @@
-Hello from GitHub!
-If you can see this, the deployment path 'lp.fukuterrace.jp/public_html/' is CORRECT.
-
