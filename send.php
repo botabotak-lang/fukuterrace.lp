@@ -1,8 +1,19 @@
 ﻿<?php
 // fukuterrace-LP/send.php
-// 入力内容をメール送信するハンドラー（自動返信機能付き・個別送信版）
+// ログ出力あり・CRLF改行コード・完全個別送信版
 
-declare(strict_types=1);
+// ログ設定
+ini_set('log_errors', 'On');
+ini_set('error_log', __DIR__ . '/php_error.log');
+$debug_log = __DIR__ . '/debug_log.txt';
+
+function writeLog($msg) {
+    global $debug_log;
+    $date = date('Y-m-d H:i:s');
+    file_put_contents($debug_log, "[$date] $msg\n", FILE_APPEND);
+}
+
+writeLog("--- Access Started ---");
 
 mb_language('Japanese');
 mb_internal_encoding('UTF-8');
@@ -11,113 +22,94 @@ header('Access-Control-Allow-Origin: *');
 header('X-Content-Type-Options: nosniff');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    writeLog("Method not allowed: " . $_SERVER['REQUEST_METHOD']);
     http_response_code(405);
-    echo 'Method Not Allowed';
     exit;
 }
 
-// --- 設定エリア ---
-// 管理者送信先（確実に届けるため個別に配列にする）
-$admin_recipients = ['info@fukuterrace.jp', 'yamasa@sanosekizai.com'];
-$bcc_recipients = ['h.shiga69@gmail.com', 'botabotak@gmail.com'];
+// 送信先リスト
+$recipients = [
+    'info@fukuterrace.jp',
+    'yamasa@sanosekizai.com',
+    'h.shiga69@gmail.com',
+    'botabotak@gmail.com'
+];
 
-define('MAIL_SUBJECT_PREFIX', '[福てらす墓園LP]');
-define('FROM_EMAIL', 'info@fukuterrace.jp');
+$from_email = 'info@fukuterrace.jp';
+$from_name = '福てらす墓園';
 
-// --- 入力値の取得 ---
-$mode = isset($_POST['mode']) && $_POST['mode'] === 'material' ? 'material' : 'visit';
-$lastName = trim((string)($_POST['lastName'] ?? ''));
-$firstName = trim((string)($_POST['firstName'] ?? ''));
-$fullName = trim($lastName . ' ' . $firstName);
-$email = trim((string)($_POST['email'] ?? ''));
-$phone = trim((string)($_POST['phone'] ?? ''));
-$zipcode = trim((string)($_POST['zipcode'] ?? ''));
-$address = trim((string)($_POST['address'] ?? ''));
+// 入力取得
+$mode = $_POST['mode'] ?? 'unknown';
+$lastName = trim($_POST['lastName'] ?? '');
+$firstName = trim($_POST['firstName'] ?? '');
+$fullName = "$lastName $firstName";
+$email = trim($_POST['email'] ?? '');
+$phone = trim($_POST['phone'] ?? '');
+$zipcode = trim($_POST['zipcode'] ?? '');
+$address = trim($_POST['address'] ?? '');
+$note = trim($_POST['note'] ?? '');
 
-// 日付と時間を結合
-$vDate1 = trim((string)($_POST['visitDate1'] ?? ''));
-$vTime1 = trim((string)($_POST['visitTime1'] ?? ''));
+$vDate1 = trim($_POST['visitDate1'] ?? '');
+$vTime1 = trim($_POST['visitTime1'] ?? '');
 $visitDate1 = $vDate1 . ($vTime1 ? ' ' . $vTime1 : '');
 
-$vDate2 = trim((string)($_POST['visitDate2'] ?? ''));
-$vTime2 = trim((string)($_POST['visitTime2'] ?? ''));
+$vDate2 = trim($_POST['visitDate2'] ?? '');
+$vTime2 = trim($_POST['visitTime2'] ?? '');
 $visitDate2 = $vDate2 . ($vTime2 ? ' ' . $vTime2 : '');
 
-$note = trim((string)($_POST['note'] ?? ''));
+writeLog("Input: Mode=$mode, Name=$fullName, Email=$email");
 
-// --- バリデーション ---
-$errors = [];
-if ($lastName === '') $errors[] = 'お名前を入力してください。';
-if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'メールアドレスを正しく入力してください。';
-
-if ($mode === 'visit') {
-    if ($phone === '') $errors[] = '電話番号を入力してください。';
-} else {
-    if ($zipcode === '') $errors[] = '郵便番号を入力してください。';
-    if ($address === '') $errors[] = '住所を入力してください。';
-}
-
-if ($errors) {
+// バリデーション
+if (!$email) {
+    writeLog("Error: No email");
     http_response_code(400);
-    echo implode("\n", $errors);
+    echo "メールアドレスが必要です";
     exit;
 }
 
-// --- メール本文作成 ---
-$subject = MAIL_SUBJECT_PREFIX . ' ' . ($mode === 'visit' ? '見学予約' : '資料請求');
-$body = "----- フォーム送信内容 -----\n";
-$body .= "区分: " . ($mode === 'visit' ? '見学予約' : '資料請求') . "\n";
-$body .= "氏名: {$fullName}\n";
-$body .= "メール: {$email}\n";
-if ($mode === 'visit') {
-    $body .= "電話番号: {$phone}\n";
-    $body .= "第1希望日: {$visitDate1}\n";
-    $body .= "第2希望日: {$visitDate2}\n";
-} else {
-    $body .= "郵便番号: {$zipcode}\n";
-    $body .= "住所: {$address}\n";
-}
-$body .= "ご相談内容:\n{$note}\n";
-$body .= "-----------------------------\n";
-$body .= "送信日時: " . date('Y-m-d H:i:s') . "\n";
+// 本文作成
+$subject = "[福てらす墓園LP] " . ($mode === 'visit' ? '見学予約' : '資料請求');
+$body = "区分: " . ($mode === 'visit' ? '見学予約' : '資料請求') . "\n";
+$body .= "氏名: $fullName\n";
+$body .= "メール: $email\n";
+$body .= "電話: $phone\n";
+$body .= "住所: $address\n";
+$body .= "日時1: $visitDate1\n";
+$body .= "日時2: $visitDate2\n";
+$body .= "備考: $note\n";
+$body .= "送信日時: " . date('Y-m-d H:i:s');
 
-// ヘッダー作成（極限までシンプルに）
-$headers = "From: " . FROM_EMAIL . "\n";
-$headers .= "Reply-To: " . $email . "\n";
+// ヘッダー（test_mail.phpと完全に同じ構成にする）
+// CRLF (\r\n) を使用
+$headers = "From: $from_email\r\n";
+$headers .= "Reply-To: $email\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8";
 
-// 1. 管理者へ送信（一人ずつ個別に送る）
-$all_admin_sent = true;
-foreach ($admin_recipients as $to) {
-    if (!mb_send_mail($to, $subject, $body, $headers, "-f " . FROM_EMAIL)) {
-        $all_admin_sent = false;
+// 管理者・関係者へ送信（ループで個別に送る）
+$success_count = 0;
+foreach ($recipients as $to) {
+    // 第5引数 -f を指定
+    $res = mb_send_mail($to, $subject, $body, $headers, "-f $from_email");
+    if ($res) {
+        writeLog("Sent to Admin: $to [OK]");
+        $success_count++;
+    } else {
+        writeLog("Sent to Admin: $to [FAIL]");
     }
 }
 
-// 2. BCCメンバーへ送信
-foreach ($bcc_recipients as $to) {
-    mb_send_mail($to, "[BCC]" . $subject, $body, $headers, "-f " . FROM_EMAIL);
-}
+// 自動返信
+$autoSubject = "【福てらす墓園】お申込み完了のお知らせ";
+$autoBody = "$fullName 様\n\nお申込みありがとうございます。\n担当者よりご連絡いたします。\n\n" . $body;
+$autoHeaders = "From: $from_email\r\n";
+$autoHeaders .= "Content-Type: text/plain; charset=UTF-8";
 
-// 3. お客様宛自動返信
-$autoSubject = "【福てらす墓園】お申込みいただきありがとうございました";
-$autoBody = "{$fullName} 様\n\n";
-$autoBody .= "この度は「福てらす墓園」へお問い合わせいただき、誠にありがとうございます。\n";
-$autoBody .= "以下の内容でお申し込みを承りました。\n\n";
-$autoBody .= "担当者より改めてご連絡させていただきますので、今しばらくお待ちください。\n\n";
-$autoBody .= $body;
-$autoBody .= "\n-----------------------------\n";
-$autoBody .= "福てらす墓園（最林寺内）\n";
-$autoBody .= "住所：静岡県藤枝市下藪田３２２\n";
-$autoBody .= "電話：0120-955-427\n";
+$resAuto = mb_send_mail($email, $autoSubject, $autoBody, $autoHeaders, "-f $from_email");
+writeLog("Sent to Customer: $email " . ($resAuto ? "[OK]" : "[FAIL]"));
 
-mb_send_mail($email, $autoSubject, $autoBody, $headers, "-f " . FROM_EMAIL);
-
-if (!$all_admin_sent) {
-    // 少なくとも一人は失敗した場合
+if ($success_count > 0) {
+    echo "OK";
+} else {
     http_response_code(500);
-    echo '送信に一部失敗しました。';
-    exit;
+    echo "Mail Error";
 }
-
-echo 'OK';
