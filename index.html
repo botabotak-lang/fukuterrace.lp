@@ -2214,19 +2214,103 @@
       <section id="contact" class="contact-form-section">
         <div class="contact-form-container">
           <h2 class="contact-form-title" id="closing">
-            <span>無料見学予約フォーム</span>
-            <span>（資料請求もこちらから）</span>
+            お問い合わせ・お申込み
           </h2>
-          <span class="contact-form-chip">入力は1分で完了</span>
-          <div class="contact-form-wrapper">
-            <iframe 
-              src="https://fukuterrace.jp/contact-lp/" 
-              width="100%" 
-              height="2100" 
-              frameborder="0" 
-              style="border:none; border-radius: 16px; background-color: #f9fdf9;">
-            </iframe>
+          <span class="contact-form-chip">入力は1分で完了します</span>
+
+          <div class="contact-form-wrapper custom-form">
+            
+            <div class="form-mode-selector">
+              <button type="button" class="mode-btn active" data-mode="visit">見学予約をしたい</button>
+              <button type="button" class="mode-btn" data-mode="material">資料請求をしたい</button>
+            </div>
+
+            <form id="lpContactForm" class="lp-form">
+              <input type="hidden" name="mode" id="formMode" value="visit">
+              
+              <div class="form-group row">
+                <div class="form-label">
+                  <label for="lastName">お名前（氏名）<span class="required">必須</span></label>
+                </div>
+                <div class="form-input name-group">
+                  <input type="text" id="lastName" name="lastName" placeholder="姓" required>
+                  <input type="text" id="firstName" name="firstName" placeholder="名">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="form-label">
+                  <label for="email">メールアドレス<span class="required">必須</span></label>
+                </div>
+                <div class="form-input">
+                  <input type="email" id="email" name="email" placeholder="example@mail.com" required>
+                </div>
+              </div>
+
+              <!-- 見学予約専用項目 -->
+              <div class="mode-fields mode-visit">
+                <div class="form-group">
+                  <div class="form-label">
+                    <label for="phone">電話番号<span class="required">必須</span></label>
+                  </div>
+                  <div class="form-input">
+                    <input type="tel" id="phone" name="phone" placeholder="090-0000-0000">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-label">
+                    <label>見学の希望日時</label>
+                  </div>
+                  <div class="form-input date-group">
+                    <div class="date-item">
+                      <span>第1希望:</span>
+                      <input type="date" name="visitDate1">
+                    </div>
+                    <div class="date-item">
+                      <span>第2希望:</span>
+                      <input type="date" name="visitDate2">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 資料請求専用項目 -->
+              <div class="mode-fields mode-material" style="display: none;">
+                <div class="form-group">
+                  <div class="form-label">
+                    <label for="zipcode">郵便番号<span class="required">必須</span></label>
+                  </div>
+                  <div class="form-input">
+                    <input type="text" id="zipcode" name="zipcode" placeholder="4260000（ハイフンなし）">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-label">
+                    <label for="address">ご住所<span class="required">必須</span></label>
+                  </div>
+                  <div class="form-input">
+                    <textarea id="address" name="address" rows="2" placeholder="静岡県藤枝市..."></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="form-label">
+                  <label for="note">ご相談・ご質問内容</label>
+                </div>
+                <div class="form-input">
+                  <textarea id="note" name="note" rows="4" placeholder="気になることなどございましたらご記入ください"></textarea>
+                </div>
+              </div>
+
+              <div class="form-submit">
+                <button type="submit" id="submitBtn" class="btn cta block">上記の内容で送信する</button>
+                <p id="formStatus" class="form-status" style="display: none;"></p>
+              </div>
+            </form>
+
           </div>
+
           <p class="contact-form-note">
             ※しつこい営業電話はいたしません<br>
             メール確認後、担当者より3営業日以内にご連絡させていただきます。<br>

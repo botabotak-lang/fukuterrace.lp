@@ -1,7 +1,6 @@
 ﻿<?php
 // fukuterrace-LP/send.php
-// 入力内容をメール送信するシンプルなハンドラーです。
-// 送信先は環境変数 FUKUTERRACE_TO または下部の定数 RECIPIENT_EMAIL で設定できます。
+// 入力内容をメール送信するハンドラー（自動返信機能付き）
 
 declare(strict_types=1);
 
@@ -17,51 +16,37 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$envRecipient = getenv('FUKUTERRACE_TO') ?: getenv('RECIPIENT_EMAIL');
-define('RECIPIENT_EMAIL', $envRecipient ?: 'h.shiga69@gmail.com'); // ← 任意のメールアドレスに変更してください
-
+// --- 設定エリア ---
+// 管理者送信先
+define('ADMIN_TO', 'info@fukuterrace.jp, yamasa@sanosekizai.com');
+define('ADMIN_BCC', 'h.shiga69@gmail.com, botabotak@gmail.com');
 define('MAIL_SUBJECT_PREFIX', '[福てらす墓園LP]');
+define('FROM_EMAIL', 'no-reply@fukuterrace.jp');
+define('FROM_NAME', '福てらす墓園');
 
+// --- 入力値の取得 ---
 $mode = isset($_POST['mode']) && $_POST['mode'] === 'material' ? 'material' : 'visit';
 $lastName = trim((string)($_POST['lastName'] ?? ''));
 $firstName = trim((string)($_POST['firstName'] ?? ''));
 $fullName = trim($lastName . ' ' . $firstName);
+$email = trim((string)($_POST['email'] ?? ''));
 $phone = trim((string)($_POST['phone'] ?? ''));
-$visitEmail = trim((string)($_POST['visitEmail'] ?? ''));
-$materialEmail = trim((string)($_POST['materialEmail'] ?? ''));
 $zipcode = trim((string)($_POST['zipcode'] ?? ''));
 $address = trim((string)($_POST['address'] ?? ''));
 $visitDate1 = trim((string)($_POST['visitDate1'] ?? ''));
 $visitDate2 = trim((string)($_POST['visitDate2'] ?? ''));
 $note = trim((string)($_POST['note'] ?? ''));
 
+// --- バリデーション ---
 $errors = [];
-
-if ($lastName === '') {
-    $errors[] = '氏は必須です。';
-}
+if ($lastName === '') $errors[] = 'お名前（氏）を入力してください。';
+if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'メールアドレスを正しく入力してください。';
 
 if ($mode === 'visit') {
-    if ($phone === '' && $visitEmail === '') {
-        $errors[] = '電話番号またはメールアドレスのいずれかを入力してください。';
-    }
-    if ($visitEmail !== '' && !filter_var($visitEmail, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'メールアドレスの形式が正しくありません。';
-    }
+    if ($phone === '') $errors[] = '電話番号を入力してください。';
 } else {
-    if ($materialEmail === '' || !filter_var($materialEmail, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = '資料請求のメールアドレスを正しく入力してください。';
-    }
-    if (!preg_match('/^\d{7}$/', preg_replace('/[^0-9]/', '', $zipcode ?? ''))) {
-        $errors[] = '郵便番号はハイフンなしの7桁で入力してください。';
-    }
-    if ($address === '') {
-        $errors[] = '住所を入力してください。';
-    }
-}
-
-if (!filter_var(RECIPIENT_EMAIL, FILTER_VALIDATE_EMAIL)) {
-    $errors[] = '送信先メールアドレスが無効です。管理者に確認してください。';
+    if ($zipcode === '') $errors[] = '郵便番号を入力してください。';
+    if ($address === '') $errors[] = '住所を入力してください。';
 }
 
 if ($errors) {
@@ -70,46 +55,63 @@ if ($errors) {
     exit;
 }
 
-$subject = MAIL_SUBJECT_PREFIX . ' ' . ($mode === 'visit' ? '見学予約の申し込み' : '資料請求の申し込み');
+// --- 管理者宛メール作成 ---
+$subject = MAIL_SUBJECT_PREFIX . ' ' . ($mode === 'visit' ? '見学予約' : '資料請求') . 'のお申し込み';
 
-$lines = [
-    '----- フォーム送信内容 -----',
-    '送信元IP: ' . ($_SERVER['REMOTE_ADDR'] ?? '不明'),
-    '送信日時: ' . (new DateTime('now', new DateTimeZone('Asia/Tokyo')))->format('Y-m-d H:i:s'),
-    '',
-    '区分: ' . ($mode === 'visit' ? '見学予約' : '資料請求'),
-    '氏名: ' . ($fullName !== '' ? $fullName : $lastName),
-    '電話番号: ' . ($phone !== '' ? $phone : '未入力'),
-    'メールアドレス: ' . ($mode === 'visit' ? ($visitEmail !== '' ? $visitEmail : '未入力') : $materialEmail),
+$body = "----- フォーム送信内容 -----\n";
+$body .= "区分: " . ($mode === 'visit' ? '見学予約' : '資料請求') . "\n";
+$body .= "氏名: {$fullName}\n";
+$body .= "メール: {$email}\n";
+if ($mode === 'visit') {
+    $body .= "電話番号: {$phone}\n";
+    $body .= "第1希望日: {$visitDate1}\n";
+    $body .= "第2希望日: {$visitDate2}\n";
+} else {
+    $body .= "郵便番号: {$zipcode}\n";
+    $body .= "住所: {$address}\n";
+}
+$body .= "ご相談内容:\n{$note}\n";
+$body .= "-----------------------------\n";
+$body .= "送信日時: " . date('Y-m-d H:i:s') . "\n";
+$body .= "送信元IP: " . $_SERVER['REMOTE_ADDR'] . "\n";
+
+$headers = [
+    'From: ' . mb_encode_mimeheader(FROM_NAME) . ' <' . FROM_EMAIL . '>',
+    'Reply-To: ' . $email,
+    'Bcc: ' . ADMIN_BCC,
+    'Content-Type: text/plain; charset=UTF-8'
 ];
 
-if ($mode === 'visit') {
-    $lines[] = '第1希望日: ' . ($visitDate1 !== '' ? $visitDate1 : '未入力');
-    $lines[] = '第2希望日: ' . ($visitDate2 !== '' ? $visitDate2 : '未入力');
-} else {
-    $lines[] = '郵便番号: ' . $zipcode;
-    $lines[] = '住所: ' . $address;
+// 管理者へ送信
+$adminSent = mb_send_mail(ADMIN_TO, $subject, $body, implode("\r\n", $headers));
+
+// --- お客様宛自動返信メール作成 ---
+if ($adminSent) {
+    $autoSubject = "【福てらす墓園】お申込みいただきありがとうございました";
+    $autoBody = "{$fullName} 様\n\n";
+    $autoBody .= "この度は「福てらす墓園」へお問い合わせいただき、誠にありがとうございます。\n";
+    $autoBody .= "以下の内容でお申し込みを承りました。\n\n";
+    $autoBody .= "内容を確認の上、担当者より改めてご連絡させていただきます。\n";
+    $autoBody .= "今しばらくお待ちくださいませ。\n\n";
+    $autoBody .= "-----------------------------\n";
+    $autoBody .= $body; // 同じ内容を添付
+    $autoBody .= "-----------------------------\n\n";
+    $autoBody .= "※本メールは自動配信専用です。心当たりがない場合は破棄してください。\n\n";
+    $autoBody .= "福てらす墓園（最林寺内）\n";
+    $autoBody .= "住所：静岡県藤枝市下藪田３２２\n";
+    $autoBody .= "電話：0120-955-427\n";
+
+    $autoHeaders = [
+        'From: ' . mb_encode_mimeheader(FROM_NAME) . ' <' . FROM_EMAIL . '>',
+        'Content-Type: text/plain; charset=UTF-8'
+    ];
+
+    mb_send_mail($email, $autoSubject, $autoBody, implode("\r\n", $autoHeaders));
 }
 
-$lines[] = '';
-$lines[] = 'ご相談内容:';
-$lines[] = $note !== '' ? $note : '（未記入）';
-$lines[] = '';
-$lines[] = '-----------------------------';
-
-$body = implode("\n", $lines);
-
-$fromEmail = ($visitEmail !== '' ? $visitEmail : ($materialEmail !== '' ? $materialEmail : 'no-reply@fukuterrace.jp'));
-$headers = [];
-$headers[] = 'From: ' . mb_encode_mimeheader('福てらす墓園 LP') . ' <' . $fromEmail . '>';
-$headers[] = 'Reply-To: ' . $fromEmail;
-$headers[] = 'Content-Type: text/plain; charset=UTF-8';
-
-$sent = mb_send_mail(RECIPIENT_EMAIL, $subject, $body, implode("\r\n", $headers));
-
-if (!$sent) {
+if (!$adminSent) {
     http_response_code(500);
-    echo '送信に失敗しました。時間を置いて再度お試しください。';
+    echo '送信に失敗しました。';
     exit;
 }
 

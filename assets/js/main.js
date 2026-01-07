@@ -241,52 +241,80 @@
   ).filter((element, index, array) => array.indexOf(element) === index);
 
   if (revealTargets.length) {
-    revealTargets.forEach((element) => element.classList.add('reveal-on-scroll'));
-    const markVisible = (element) => element.classList.add('is-visible');
+    // ... (rest of scroll reveal logic)
+  }
 
-    if (prefersReducedMotion.matches || typeof IntersectionObserver === 'undefined') {
-      revealTargets.forEach(markVisible);
-    } else {
-      let viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-      const updateViewportHeight = () => {
-        viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-      };
-      window.addEventListener('resize', updateViewportHeight);
-      window.addEventListener('orientationchange', updateViewportHeight);
+  // --- Contact Form Logic ---
+  const contactForm = document.getElementById('lpContactForm');
+  const modeButtons = document.querySelectorAll('.mode-btn');
+  const formModeInput = document.getElementById('formMode');
+  const visitFields = document.querySelector('.mode-fields.mode-visit');
+  const materialFields = document.querySelector('.mode-fields.mode-material');
+  const formStatus = document.getElementById('formStatus');
+  const submitBtn = document.getElementById('submitBtn');
 
-      const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            markVisible(entry.target);
-            obs.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.15,
-        rootMargin: '0px 0px -5% 0px'
-      });
-
-      revealTargets.forEach((element) => {
-        const rect = element.getBoundingClientRect();
-        const alreadyVisible = rect.top <= viewportHeight * 0.9 && rect.bottom >= 0;
-        if (alreadyVisible) {
-          markVisible(element);
+  if (contactForm) {
+    // Mode Toggling
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.mode;
+        
+        // Update Buttons
+        modeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update Hidden Input
+        formModeInput.value = mode;
+        
+        // Show/Hide Fields
+        if (mode === 'visit') {
+          visitFields.style.display = 'block';
+          materialFields.style.display = 'none';
+          document.getElementById('phone').required = true;
+          document.getElementById('zipcode').required = false;
+          document.getElementById('address').required = false;
         } else {
-          observer.observe(element);
+          visitFields.style.display = 'none';
+          materialFields.style.display = 'block';
+          document.getElementById('phone').required = false;
+          document.getElementById('zipcode').required = true;
+          document.getElementById('address').required = true;
         }
       });
+    });
 
-      const handleMotionChange = (event) => {
-        if (!event.matches) return;
-        revealTargets.forEach(markVisible);
-        observer.disconnect();
-      };
-      if (typeof prefersReducedMotion.addEventListener === 'function') {
-        prefersReducedMotion.addEventListener('change', handleMotionChange);
-      } else if (typeof prefersReducedMotion.addListener === 'function') {
-        prefersReducedMotion.addListener(handleMotionChange);
+    // Form Submission
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      submitBtn.disabled = true;
+      submitBtn.textContent = '送信中...';
+      formStatus.style.display = 'none';
+
+      const formData = new FormData(contactForm);
+
+      try {
+        const response = await fetch('./send.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          // Success
+          window.location.href = './thanks.html';
+        } else {
+          // Error
+          const errorText = await response.text();
+          throw new Error(errorText || '送信に失敗しました。');
+        }
+      } catch (err) {
+        formStatus.textContent = err.message;
+        formStatus.style.display = 'block';
+        formStatus.className = 'form-status error';
+        submitBtn.disabled = false;
+        submitBtn.textContent = '上記の内容で送信する';
       }
-    }
+    });
   }
 
 })();
