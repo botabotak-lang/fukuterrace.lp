@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 define('ADMIN_TO', 'info@fukuterrace.jp, yamasa@sanosekizai.com');
 define('ADMIN_BCC', 'h.shiga69@gmail.com, botabotak@gmail.com');
 define('MAIL_SUBJECT_PREFIX', '[福てらす墓園LP]');
-define('FROM_EMAIL', 'no-reply@fukuterrace.jp');
+define('FROM_EMAIL', 'info@fukuterrace.jp');
 define('FROM_NAME', '福てらす墓園');
 
 // --- 入力値の取得 ---
@@ -33,8 +33,16 @@ $email = trim((string)($_POST['email'] ?? ''));
 $phone = trim((string)($_POST['phone'] ?? ''));
 $zipcode = trim((string)($_POST['zipcode'] ?? ''));
 $address = trim((string)($_POST['address'] ?? ''));
-$visitDate1 = trim((string)($_POST['visitDate1'] ?? ''));
-$visitDate2 = trim((string)($_POST['visitDate2'] ?? ''));
+
+// 日付と時間を結合
+$vDate1 = trim((string)($_POST['visitDate1'] ?? ''));
+$vTime1 = trim((string)($_POST['visitTime1'] ?? ''));
+$visitDate1 = $vDate1 . ($vTime1 ? ' ' . $vTime1 : '');
+
+$vDate2 = trim((string)($_POST['visitDate2'] ?? ''));
+$vTime2 = trim((string)($_POST['visitTime2'] ?? ''));
+$visitDate2 = $vDate2 . ($vTime2 ? ' ' . $vTime2 : '');
+
 $note = trim((string)($_POST['note'] ?? ''));
 
 // --- バリデーション ---
@@ -79,11 +87,13 @@ $headers = [
     'From: ' . mb_encode_mimeheader(FROM_NAME) . ' <' . FROM_EMAIL . '>',
     'Reply-To: ' . $email,
     'Bcc: ' . ADMIN_BCC,
-    'Content-Type: text/plain; charset=UTF-8'
+    'Content-Type: text/plain; charset=UTF-8',
+    'X-Mailer: PHP/' . phpversion()
 ];
 
 // 管理者へ送信
-$adminSent = mb_send_mail(ADMIN_TO, $subject, $body, implode("\r\n", $headers));
+// 第5引数に -f を追加して送信元の信頼性を高める
+$adminSent = mb_send_mail(ADMIN_TO, $subject, $body, implode("\n", $headers), "-f " . FROM_EMAIL);
 
 // --- お客様宛自動返信メール作成 ---
 if ($adminSent) {
@@ -103,10 +113,11 @@ if ($adminSent) {
 
     $autoHeaders = [
         'From: ' . mb_encode_mimeheader(FROM_NAME) . ' <' . FROM_EMAIL . '>',
-        'Content-Type: text/plain; charset=UTF-8'
+        'Content-Type: text/plain; charset=UTF-8',
+        'X-Mailer: PHP/' . phpversion()
     ];
 
-    mb_send_mail($email, $autoSubject, $autoBody, implode("\r\n", $autoHeaders));
+    mb_send_mail($email, $autoSubject, $autoBody, implode("\n", $autoHeaders), "-f " . FROM_EMAIL);
 }
 
 if (!$adminSent) {
