@@ -254,31 +254,46 @@
   const submitBtn = document.getElementById('submitBtn');
 
   if (contactForm) {
+    console.log('Contact form initialized'); // デバッグ用
+
     // Mode Toggling
     modeButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const mode = btn.dataset.mode;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const mode = btn.getAttribute('data-mode');
+        console.log('Switching to mode:', mode);
         
         // Update Buttons
         modeButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         // Update Hidden Input
-        formModeInput.value = mode;
+        if (formModeInput) formModeInput.value = mode;
         
         // Show/Hide Fields
         if (mode === 'visit') {
-          visitFields.style.display = 'block';
-          materialFields.style.display = 'none';
-          document.getElementById('phone').required = true;
-          document.getElementById('zipcode').required = false;
-          document.getElementById('address').required = false;
+          if (visitFields) visitFields.style.display = 'block';
+          if (materialFields) materialFields.style.display = 'none';
+          
+          // Toggle required attributes safely
+          const phoneInput = document.getElementById('phone');
+          const zipInput = document.getElementById('zipcode');
+          const addrInput = document.getElementById('address');
+          
+          if (phoneInput) phoneInput.required = true;
+          if (zipInput) zipInput.required = false;
+          if (addrInput) addrInput.required = false;
         } else {
-          visitFields.style.display = 'none';
-          materialFields.style.display = 'block';
-          document.getElementById('phone').required = false;
-          document.getElementById('zipcode').required = true;
-          document.getElementById('address').required = true;
+          if (visitFields) visitFields.style.display = 'none';
+          if (materialFields) materialFields.style.display = 'block';
+          
+          const phoneInput = document.getElementById('phone');
+          const zipInput = document.getElementById('zipcode');
+          const addrInput = document.getElementById('address');
+          
+          if (phoneInput) phoneInput.required = false;
+          if (zipInput) zipInput.required = true;
+          if (addrInput) addrInput.required = true;
         }
       });
     });
@@ -287,9 +302,12 @@
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      if (!submitBtn) return;
+      
       submitBtn.disabled = true;
+      const originalText = submitBtn.textContent;
       submitBtn.textContent = '送信中...';
-      formStatus.style.display = 'none';
+      if (formStatus) formStatus.style.display = 'none';
 
       const formData = new FormData(contactForm);
 
@@ -308,11 +326,13 @@
           throw new Error(errorText || '送信に失敗しました。');
         }
       } catch (err) {
-        formStatus.textContent = err.message;
-        formStatus.style.display = 'block';
-        formStatus.className = 'form-status error';
+        if (formStatus) {
+          formStatus.textContent = err.message;
+          formStatus.style.display = 'block';
+          formStatus.className = 'form-status error';
+        }
         submitBtn.disabled = false;
-        submitBtn.textContent = '上記の内容で送信する';
+        submitBtn.textContent = originalText;
       }
     });
   }
