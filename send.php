@@ -45,6 +45,9 @@ $firstName = trim($_POST['firstName'] ?? '');
 $fullName = "$lastName $firstName";
 $email = trim($_POST['email'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
+if ($mode === 'material') {
+    $phone = trim($_POST['phone-material'] ?? '');
+}
 $zipcode = trim($_POST['zipcode'] ?? '');
 $address = trim($_POST['address'] ?? '');
 $note = trim($_POST['note'] ?? '');
@@ -70,8 +73,9 @@ if (!$email) {
 $details = "区分: $modeText\n";
 $details .= "氏名: $fullName 様\n";
 $details .= "メール: $email\n";
+$details .= "電話番号: $phone\n";
+
 if ($mode === 'visit') {
-    $details .= "電話番号: $phone\n";
     $details .= "第1希望日時: $visitDate1\n";
     $details .= "第2希望日時: $visitDate2\n";
 } else {
