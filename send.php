@@ -1,6 +1,6 @@
 ﻿<?php
 // fukuterrace-LP/send.php
-// ログ出力あり・CRLF改行コード・完全個別送信版
+// 文面反映・文字化け修正（UTF-8固定）・ログ出力あり
 
 // ログ設定
 ini_set('log_errors', 'On');
@@ -13,16 +13,16 @@ function writeLog($msg) {
     file_put_contents($debug_log, "[$date] $msg\n", FILE_APPEND);
 }
 
-writeLog("--- Access Started ---");
+writeLog("--- Access Started (Template Version) ---");
 
-mb_language('Japanese');
-mb_internal_encoding('UTF-8');
+// 【重要】文字化け対策: UTF-8で統一して送る設定
+mb_language("uni"); 
+mb_internal_encoding("UTF-8");
 
 header('Access-Control-Allow-Origin: *');
 header('X-Content-Type-Options: nosniff');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    writeLog("Method not allowed: " . $_SERVER['REQUEST_METHOD']);
     http_response_code(405);
     exit;
 }
@@ -57,55 +57,77 @@ $vDate2 = trim($_POST['visitDate2'] ?? '');
 $vTime2 = trim($_POST['visitTime2'] ?? '');
 $visitDate2 = $vDate2 . ($vTime2 ? ' ' . $vTime2 : '');
 
-writeLog("Input: Mode=$mode, Name=$fullName, Email=$email");
+$modeText = ($mode === 'visit' ? '見学予約' : '資料請求');
 
 // バリデーション
 if (!$email) {
-    writeLog("Error: No email");
     http_response_code(400);
     echo "メールアドレスが必要です";
     exit;
 }
 
-// 本文作成
-$subject = "[福てらす墓園LP] " . ($mode === 'visit' ? '見学予約' : '資料請求');
-$body = "区分: " . ($mode === 'visit' ? '見学予約' : '資料請求') . "\n";
-$body .= "氏名: $fullName\n";
-$body .= "メール: $email\n";
-$body .= "電話: $phone\n";
-$body .= "住所: $address\n";
-$body .= "日時1: $visitDate1\n";
-$body .= "日時2: $visitDate2\n";
-$body .= "備考: $note\n";
-$body .= "送信日時: " . date('Y-m-d H:i:s');
+// --- 共通の「入力内容」ブロック作成 ---
+$details = "区分: $modeText\n";
+$details .= "氏名: $fullName 様\n";
+$details .= "メール: $email\n";
+if ($mode === 'visit') {
+    $details .= "電話番号: $phone\n";
+    $details .= "第1希望日時: $visitDate1\n";
+    $details .= "第2希望日時: $visitDate2\n";
+} else {
+    $details .= "郵便番号: $zipcode\n";
+    $details .= "住所: $address\n";
+}
+$details .= "ご相談・ご質問:\n$note";
 
-// ヘッダー（test_mail.phpと完全に同じ構成にする）
-// CRLF (\r\n) を使用
+
+// --- 1. 管理者（自社）宛メール作成 ---
+$adminSubject = "[福てらす墓園LP] {$modeText}のお申込み";
+$adminBody = "ホームページよりお申し込みがありました。\n";
+$adminBody .= "対応をお願いします。\n\n";
+$adminBody .= "-----------------------------\n";
+$adminBody .= "【送信内容】\n";
+$adminBody .= $details . "\n";
+$adminBody .= "-----------------------------\n";
+$adminBody .= "送信日時: " . date('Y-m-d H:i:s') . "\n";
+$adminBody .= "-----------------------------\n";
+
+// ヘッダー（UTF-8明記）
 $headers = "From: $from_email\r\n";
 $headers .= "Reply-To: $email\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8";
 
-// 管理者・関係者へ送信（ループで個別に送る）
+// 管理者へ送信（個別ループ）
 $success_count = 0;
 foreach ($recipients as $to) {
-    // 第5引数 -f を指定
-    $res = mb_send_mail($to, $subject, $body, $headers, "-f $from_email");
-    if ($res) {
-        writeLog("Sent to Admin: $to [OK]");
+    if (mb_send_mail($to, $adminSubject, $adminBody, $headers, "-f $from_email")) {
         $success_count++;
-    } else {
-        writeLog("Sent to Admin: $to [FAIL]");
     }
 }
 
-// 自動返信
-$autoSubject = "【福てらす墓園】お申込み完了のお知らせ";
-$autoBody = "$fullName 様\n\nお申込みありがとうございます。\n担当者よりご連絡いたします。\n\n" . $body;
+// --- 2. お客様宛自動返信メール（サンクスメール）作成 ---
+$customerSubject = "【福てらす墓園】お問い合わせありがとうございます";
+$customerBody = "$fullName 様\n\n";
+$customerBody .= "この度は「福てらす墓園」へお問い合わせいただき、誠にありがとうございます。\n";
+$customerBody .= "以下の内容でお申し込みを承りました。\n\n";
+$customerBody .= "内容を確認の上、担当者より改めてご連絡させていただきます。\n";
+$customerBody .= "恐れ入りますが、今しばらくお待ちくださいませ。\n\n";
+$customerBody .= "-----------------------------\n";
+$customerBody .= "【お申込み内容】\n";
+$customerBody .= $details . "\n";
+$customerBody .= "-----------------------------\n\n";
+$customerBody .= "※本メールは自動配信専用です。\n";
+$customerBody .= "お心当たりがない場合は、削除をお願いいたします。\n\n";
+$customerBody .= "福てらす墓園（最林寺内）\n";
+$customerBody .= "住所：静岡県藤枝市下藪田３２２\n";
+$customerBody .= "電話：0120-955-427\n";
+$customerBody .= "Web：https://fukuterrace.jp/\n";
+
 $autoHeaders = "From: $from_email\r\n";
 $autoHeaders .= "Content-Type: text/plain; charset=UTF-8";
 
-$resAuto = mb_send_mail($email, $autoSubject, $autoBody, $autoHeaders, "-f $from_email");
-writeLog("Sent to Customer: $email " . ($resAuto ? "[OK]" : "[FAIL]"));
+// お客様へ送信
+mb_send_mail($email, $customerSubject, $customerBody, $autoHeaders, "-f $from_email");
 
 if ($success_count > 0) {
     echo "OK";
