@@ -67,6 +67,32 @@
     }
   }, { passive: true });
 
+  // Header hide/show on scroll
+  const header = document.querySelector('.site-header');
+  let lastScrollY = window.scrollY;
+  let scrollThreshold = 10; // Scroll difference to trigger hide/show
+
+  window.addEventListener('scroll', () => {
+    if (body.classList.contains('nav-open')) return; // Don't hide if menu is open
+
+    const currentScrollY = window.scrollY;
+    const diff = currentScrollY - lastScrollY;
+
+    if (currentScrollY <= 100) {
+      // Always show at the top of the page
+      header.style.transform = 'translateY(0)';
+    } else if (Math.abs(diff) > scrollThreshold) {
+      if (diff > 0) {
+        // Scrolling down - hide
+        header.style.transform = 'translateY(-100%)';
+      } else {
+        // Scrolling up - show
+        header.style.transform = 'translateY(0)';
+      }
+      lastScrollY = currentScrollY;
+    }
+  }, { passive: true });
+
   // Track touch gestures to cancel horizontal pans on mobile devices.
   let touchLockDirection;
   let touchStartX = 0;
