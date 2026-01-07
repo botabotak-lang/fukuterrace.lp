@@ -69,25 +69,30 @@
 
   // Header hide/show on scroll
   const header = document.querySelector('.site-header');
-  let lastScrollY = window.scrollY;
-  let scrollThreshold = 10; // Scroll difference to trigger hide/show
+  let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollThreshold = 5; // より敏感に反応するように
 
   window.addEventListener('scroll', () => {
-    if (body.classList.contains('nav-open')) return; // Don't hide if menu is open
+    // メニューが開いているときは何もしない
+    if (body.classList.contains('nav-open')) return;
 
-    const currentScrollY = window.scrollY;
+    const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // スクロール量の差分
     const diff = currentScrollY - lastScrollY;
 
-    if (currentScrollY <= 100) {
-      // Always show at the top of the page
-      header.style.transform = 'translateY(0)';
-    } else if (Math.abs(diff) > scrollThreshold) {
+    // ページの最上部付近では常に表示
+    if (currentScrollY <= 50) {
+      header.classList.remove('is-hidden');
+    } 
+    // しきい値以上のスクロールがあった場合のみ判定
+    else if (Math.abs(diff) > scrollThreshold) {
       if (diff > 0) {
-        // Scrolling down - hide
-        header.style.transform = 'translateY(-100%)';
+        // 下にスクロール：隠す
+        header.classList.add('is-hidden');
       } else {
-        // Scrolling up - show
-        header.style.transform = 'translateY(0)';
+        // 上にスクロール：出す
+        header.classList.remove('is-hidden');
       }
       lastScrollY = currentScrollY;
     }
