@@ -70,33 +70,30 @@
   // Header hide/show on scroll
   const header = document.querySelector('.site-header');
   let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
-  const scrollThreshold = 5; // より敏感に反応するように
+  const scrollThreshold = 5;
 
-  window.addEventListener('scroll', () => {
-    // メニューが開いているときは何もしない
-    if (body.classList.contains('nav-open')) return;
-
-    const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+  if (header) {
+    // Ensure transition is set
+    header.style.transition = 'transform 0.3s ease-in-out';
     
-    // スクロール量の差分
-    const diff = currentScrollY - lastScrollY;
+    window.addEventListener('scroll', () => {
+      if (body.classList.contains('nav-open')) return;
+      
+      const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+      const diff = currentScrollY - lastScrollY;
 
-    // ページの最上部付近では常に表示
-    if (currentScrollY <= 50) {
-      header.classList.remove('is-hidden');
-    } 
-    // しきい値以上のスクロールがあった場合のみ判定
-    else if (Math.abs(diff) > scrollThreshold) {
-      if (diff > 0) {
-        // 下にスクロール：隠す
-        header.classList.add('is-hidden');
-      } else {
-        // 上にスクロール：出す
-        header.classList.remove('is-hidden');
+      if (currentScrollY <= 50) {
+        header.style.transform = 'translateY(0)';
+      } else if (Math.abs(diff) > scrollThreshold) {
+        if (diff > 0) {
+          header.style.transform = 'translateY(-100%)';
+        } else {
+          header.style.transform = 'translateY(0)';
+        }
+        lastScrollY = currentScrollY;
       }
-      lastScrollY = currentScrollY;
-    }
-  }, { passive: true });
+    }, { passive: true });
+  }
 
   // Track touch gestures to cancel horizontal pans on mobile devices.
   let touchLockDirection;
