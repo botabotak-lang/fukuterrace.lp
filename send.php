@@ -1,8 +1,17 @@
 ﻿<?php
 // fukuterrace-LP/send.php
-// 入力内容をメール送信するハンドラー（自動返信機能付き）
+// 入力内容をメール送信するハンドラー（自動返信機能付き・ログ出力版）
 
 declare(strict_types=1);
+
+// ログ記録関数
+function writeLog($message) {
+    $logFile = __DIR__ . '/debug_log.txt';
+    $timestamp = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[{$timestamp}] {$message}\n", FILE_APPEND);
+}
+
+writeLog("--- Access received ---");
 
 mb_language('Japanese');
 mb_internal_encoding('UTF-8');
@@ -45,6 +54,8 @@ $visitDate2 = $vDate2 . ($vTime2 ? ' ' . $vTime2 : '');
 
 $note = trim((string)($_POST['note'] ?? ''));
 
+writeLog("Mode: {$mode}, Name: {$fullName}, Email: {$email}");
+
 // --- バリデーション ---
 $errors = [];
 if ($lastName === '') $errors[] = 'お名前（氏）を入力してください。';
@@ -58,6 +69,7 @@ if ($mode === 'visit') {
 }
 
 if ($errors) {
+    writeLog("Validation errors: " . implode(", ", $errors));
     http_response_code(400);
     echo implode("\n", $errors);
     exit;
@@ -83,17 +95,18 @@ $body .= "-----------------------------\n";
 $body .= "送信日時: " . date('Y-m-d H:i:s') . "\n";
 $body .= "送信元IP: " . $_SERVER['REMOTE_ADDR'] . "\n";
 
-$headers = [
-    'From: ' . mb_encode_mimeheader(FROM_NAME) . ' <' . FROM_EMAIL . '>',
-    'Reply-To: ' . $email,
-    'Bcc: ' . ADMIN_BCC,
-    'Content-Type: text/plain; charset=UTF-8',
-    'X-Mailer: PHP/' . phpversion()
-];
+// ヘッダー（シンプルに構成）
+$headers = "From: " . mb_encode_mimeheader(FROM_NAME) . " <" . FROM_EMAIL . ">\r\n";
+$headers .= "Reply-To: " . $email . "\r\n";
+$headers .= "Bcc: " . ADMIN_BCC . "\r\n";
+$headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+$headers .= "X-Mailer: PHP/" . phpversion();
 
 // 管理者へ送信
-// 第5引数に -f を追加して送信元の信頼性を高める
-$adminSent = mb_send_mail(ADMIN_TO, $subject, $body, implode("\n", $headers), "-f " . FROM_EMAIL);
+// -f オプションでエンベロープFromを指定（Xserverでの到達率向上）
+$adminSent = mb_send_mail(ADMIN_TO, $subject, $body, $headers, "-f " . FROM_EMAIL);
+
+writeLog("Admin mail sent result: " . ($adminSent ? 'Success' : 'Failed'));
 
 // --- お客様宛自動返信メール作成 ---
 if ($adminSent) {
@@ -111,13 +124,12 @@ if ($adminSent) {
     $autoBody .= "住所：静岡県藤枝市下藪田３２２\n";
     $autoBody .= "電話：0120-955-427\n";
 
-    $autoHeaders = [
-        'From: ' . mb_encode_mimeheader(FROM_NAME) . ' <' . FROM_EMAIL . '>',
-        'Content-Type: text/plain; charset=UTF-8',
-        'X-Mailer: PHP/' . phpversion()
-    ];
+    $autoHeaders = "From: " . mb_encode_mimeheader(FROM_NAME) . " <" . FROM_EMAIL . ">\r\n";
+    $autoHeaders .= "Content-Type: text/plain; charset=UTF-8\r\n";
+    $autoHeaders .= "X-Mailer: PHP/" . phpversion();
 
-    mb_send_mail($email, $autoSubject, $autoBody, implode("\n", $autoHeaders), "-f " . FROM_EMAIL);
+    $customerSent = mb_send_mail($email, $autoSubject, $autoBody, $autoHeaders, "-f " . FROM_EMAIL);
+    writeLog("Customer mail sent result: " . ($customerSent ? 'Success' : 'Failed'));
 }
 
 if (!$adminSent) {
