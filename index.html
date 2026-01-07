@@ -63,7 +63,7 @@
 
 
 
-    <link rel="stylesheet" href="./assets/css/style.css?v=20251215-23" />
+    <link rel="stylesheet" href="./assets/css/style.css?v=20251215-24" />
     <style>
       /* Mobile-only: keep nav link text horizontal and unwrapped */
       @media (max-width: 820px){
@@ -2261,14 +2261,40 @@
                   <div class="form-label">
                     <label>見学の希望日時</label>
                   </div>
-                  <div class="form-input date-group">
-                    <div class="date-item">
-                      <span>第1希望:</span>
-                      <input type="datetime-local" name="visitDate1">
+                  <div class="form-input date-time-group">
+                    <div class="date-row">
+                      <span class="row-label">第1希望:</span>
+                      <div class="inputs">
+                        <input type="date" name="visitDate1" class="input-date">
+                        <select name="visitTime1" class="input-time">
+                          <option value="">時間を選択</option>
+                          <option value="09:00">09:00</option>
+                          <option value="10:00">10:00</option>
+                          <option value="11:00">11:00</option>
+                          <option value="12:00">12:00</option>
+                          <option value="13:00">13:00</option>
+                          <option value="14:00">14:00</option>
+                          <option value="15:00">15:00</option>
+                          <option value="16:00">16:00</option>
+                        </select>
+                      </div>
                     </div>
-                    <div class="date-item">
-                      <span>第2希望:</span>
-                      <input type="datetime-local" name="visitDate2">
+                    <div class="date-row">
+                      <span class="row-label">第2希望:</span>
+                      <div class="inputs">
+                        <input type="date" name="visitDate2" class="input-date">
+                        <select name="visitTime2" class="input-time">
+                          <option value="">時間を選択</option>
+                          <option value="09:00">09:00</option>
+                          <option value="10:00">10:00</option>
+                          <option value="11:00">11:00</option>
+                          <option value="12:00">12:00</option>
+                          <option value="13:00">13:00</option>
+                          <option value="14:00">14:00</option>
+                          <option value="15:00">15:00</option>
+                          <option value="16:00">16:00</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2281,7 +2307,7 @@
                     <label for="zipcode">郵便番号<span class="required">必須</span></label>
                   </div>
                   <div class="form-input">
-                    <input type="text" id="zipcode" name="zipcode" placeholder="4260000（ハイフンなし）">
+                    <input type="text" id="zipcode" name="zipcode" maxlength="7" placeholder="4260000（ハイフンなしで住所を自動入力）">
                   </div>
                 </div>
                 <div class="form-group">
@@ -2289,7 +2315,7 @@
                     <label for="address">ご住所<span class="required">必須</span></label>
                   </div>
                   <div class="form-input">
-                    <textarea id="address" name="address" rows="2" placeholder="静岡県藤枝市..."></textarea>
+                    <textarea id="address" name="address" rows="3" placeholder="静岡県藤枝市..."></textarea>
                   </div>
                 </div>
               </div>
@@ -2597,7 +2623,7 @@
 
 
 
-    <script src="./assets/js/main.js?v=20251215-23" defer></script>
+    <script src="./assets/js/main.js?v=20251215-24" defer></script>
 
 
 

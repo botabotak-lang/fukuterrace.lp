@@ -252,6 +252,28 @@
   const materialFields = document.querySelector('.mode-fields.mode-material');
   const formStatus = document.getElementById('formStatus');
   const submitBtn = document.getElementById('submitBtn');
+  const zipcode = document.getElementById('zipcode');
+  const address = document.getElementById('address');
+
+  // 郵便番号から住所を自動入力
+  if (zipcode && address) {
+    zipcode.addEventListener('input', async (e) => {
+      const val = e.target.value.replace(/[^0-9]/g, '');
+      if (val.length === 7) {
+        try {
+          const response = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${val}`);
+          const data = await response.json();
+          if (data.results) {
+            const res = data.results[0];
+            address.value = res.address1 + res.address2 + res.address3;
+            address.focus();
+          }
+        } catch (error) {
+          console.error('Zipcode search failed:', error);
+        }
+      }
+    });
+  }
 
   if (contactForm) {
     console.log('Contact form initialized'); // デバッグ用
