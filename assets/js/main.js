@@ -70,7 +70,7 @@
   // Header hide/show on scroll
   const header = document.querySelector('.site-header');
   let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
-  const scrollThreshold = 5;
+  const scrollThreshold = 10; // 少し感度を下げる
 
   if (header) {
     // Ensure transition is set
@@ -83,15 +83,21 @@
       const diff = currentScrollY - lastScrollY;
 
       if (currentScrollY <= 50) {
+        // 最上部付近では常に表示
         header.style.transform = 'translateY(0)';
       } else if (Math.abs(diff) > scrollThreshold) {
         if (diff > 0) {
+          // 下スクロールで隠す
           header.style.transform = 'translateY(-100%)';
         } else {
+          // 上スクロールで表示
           header.style.transform = 'translateY(0)';
         }
         lastScrollY = currentScrollY;
       }
+      // スクロール方向が反転した瞬間のために、閾値を超えなくても方向が変わったら更新すべきだが、
+      // チラつき防止のため閾値判定を入れたままにする。ただし、lastScrollYの更新タイミングを調整。
+      // ここではシンプルに閾値を超えたときだけ更新するロジックのまま、閾値を調整。
     }, { passive: true });
   }
 
@@ -145,6 +151,7 @@
 
   const closeNav = () => setNavState(false);
   const toggleNav = () => {
+    // console.log('Toggle Nav Clicked');
     const expanded = navToggle ? navToggle.getAttribute('aria-expanded') === 'true' : false;
     setNavState(!expanded);
   };
@@ -152,18 +159,14 @@
   if (navToggle && siteNav) {
     setNavState(false);
 
-    // avoid double-binding
-    if (!navToggle.dataset.bound) {
-      navToggle.dataset.bound = 'true';
-      navToggle.addEventListener('click', (event) => {
-        // prevent duplicate handlers from re-toggling
-        event.preventDefault();
-        event.stopPropagation();
-        if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
-        const next = navToggle.getAttribute('aria-expanded') !== 'true';
-        setNavState(next);
-      });
-    }
+    // remove existing listeners if any (simple approach: clone or just ensure single binding)
+    // Here we assume script runs once.
+    navToggle.onclick = null; // Clear old handlers just in case
+    navToggle.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleNav();
+    });
 
     document.addEventListener('click', (event) => {
       if (!mobileQuery.matches || navToggle.getAttribute('aria-expanded') !== 'true') return;
@@ -241,7 +244,23 @@
   ).filter((element, index, array) => array.indexOf(element) === index);
 
   if (revealTargets.length) {
-    // ... (rest of scroll reveal logic)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    });
+
+    revealTargets.forEach((target) => {
+      target.classList.add('reveal-on-scroll');
+      observer.observe(target);
+    });
   }
 
   // --- Contact Form Logic ---
