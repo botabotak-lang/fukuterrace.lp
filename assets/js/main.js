@@ -363,13 +363,25 @@
         if (!modeParam) setFormMode('visit');
     }
 
-    // Handle CTA Links
+    // Handle CTA Links with Smooth Scroll
     document.querySelectorAll('.js-cta-link').forEach(link => {
         link.addEventListener('click', (e) => {
+            // Prevent default anchor jump to allow smooth scroll handling
+            e.preventDefault();
+            
             const mode = link.getAttribute('data-mode');
             if (mode) {
                 // Map 'document' to 'material' as per form logic
-                setFormMode(mode === 'document' ? 'material' : 'visit');
+                const formMode = mode === 'document' ? 'material' : 'visit';
+                setFormMode(formMode);
+            }
+            
+            // Smooth scroll to contact form
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+                // Update URL hash without jumping
+                history.pushState(null, '', '#contact?mode=' + mode);
             }
         });
     });
