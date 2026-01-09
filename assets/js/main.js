@@ -11,6 +11,7 @@
 
   const setNavState = (expanded) => {
     if (!navToggle || !siteNav) return;
+    // console.log('Setting Nav State:', expanded);
     navToggle.setAttribute('aria-expanded', String(expanded));
     if (srLabel) {
       srLabel.textContent = expanded ? 'メニューを閉じる' : 'メニューを開く';
@@ -70,34 +71,28 @@
   // Header hide/show on scroll
   const header = document.querySelector('.site-header');
   let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
-  const scrollThreshold = 10; // 少し感度を下げる
+  const scrollThreshold = 10;
 
   if (header) {
-    // Ensure transition is set
-    header.style.transition = 'transform 0.3s ease-in-out';
-    
     window.addEventListener('scroll', () => {
+      // メニューが開いているときは何もしない
       if (body.classList.contains('nav-open')) return;
       
       const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
       const diff = currentScrollY - lastScrollY;
 
       if (currentScrollY <= 50) {
-        // 最上部付近では常に表示
-        header.style.transform = 'translateY(0)';
+        header.classList.remove('is-hidden');
       } else if (Math.abs(diff) > scrollThreshold) {
         if (diff > 0) {
           // 下スクロールで隠す
-          header.style.transform = 'translateY(-100%)';
+          header.classList.add('is-hidden');
         } else {
           // 上スクロールで表示
-          header.style.transform = 'translateY(0)';
+          header.classList.remove('is-hidden');
         }
         lastScrollY = currentScrollY;
       }
-      // スクロール方向が反転した瞬間のために、閾値を超えなくても方向が変わったら更新すべきだが、
-      // チラつき防止のため閾値判定を入れたままにする。ただし、lastScrollYの更新タイミングを調整。
-      // ここではシンプルに閾値を超えたときだけ更新するロジックのまま、閾値を調整。
     }, { passive: true });
   }
 
@@ -159,22 +154,24 @@
   if (navToggle && siteNav) {
     setNavState(false);
 
-    // remove existing listeners if any (simple approach: clone or just ensure single binding)
-    // Here we assume script runs once.
-    navToggle.onclick = null; // Clear old handlers just in case
     navToggle.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
-      toggleNav();
+      const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+      setNavState(!expanded);
     });
 
     document.addEventListener('click', (event) => {
-      if (!mobileQuery.matches || navToggle.getAttribute('aria-expanded') !== 'true') return;
+      // メニューが開いていない場合は何もしない
+      if (navToggle.getAttribute('aria-expanded') !== 'true') return;
+      
       const target = event.target;
-      if (target instanceof Element && (siteNav.contains(target) || navToggle.contains(target))) {
+      // ボタン自体またはメニューの中身をクリックした場合は閉じない
+      if (navToggle.contains(target) || siteNav.contains(target)) {
         return;
       }
-      closeNav();
+      
+      setNavState(false);
     });
 
     document.addEventListener('keydown', (event) => {
