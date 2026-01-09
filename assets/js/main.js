@@ -294,16 +294,18 @@
   if (contactForm) {
     console.log('Contact form initialized'); // デバッグ用
 
-    // Mode Toggling
-    modeButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const mode = btn.getAttribute('data-mode');
+    // Define setFormMode function
+    const setFormMode = (mode) => {
         console.log('Switching to mode:', mode);
         
         // Update Buttons
-        modeButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        modeButtons.forEach(b => {
+            if (b.getAttribute('data-mode') === mode) {
+                b.classList.add('active');
+            } else {
+                b.classList.remove('active');
+            }
+        });
         
         // Update Hidden Input
         if (formModeInput) formModeInput.value = mode;
@@ -333,7 +335,43 @@
           if (zipInput) zipInput.required = true;
           if (addrInput) addrInput.required = true;
         }
+    };
+
+    // Mode Toggling
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const mode = btn.getAttribute('data-mode');
+        setFormMode(mode);
       });
+    });
+
+    // Handle URL Params on Load
+    const urlParams = new URLSearchParams(window.location.search);
+    const modeParam = urlParams.get('mode');
+    if (modeParam === 'document' || modeParam === 'material') {
+        setFormMode('material');
+    } else {
+        // Default to visit if explicitly requested or no param
+        // (Existing logic: hidden input value is 'visit' initially)
+        // If we want to force visit mode on load if ?mode=visit is present:
+        if (modeParam === 'visit') {
+            setFormMode('visit');
+        }
+        // If no param, we leave it as per HTML default (usually visit)
+        // But let's sync it just in case
+        if (!modeParam) setFormMode('visit');
+    }
+
+    // Handle CTA Links
+    document.querySelectorAll('.js-cta-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const mode = link.getAttribute('data-mode');
+            if (mode) {
+                // Map 'document' to 'material' as per form logic
+                setFormMode(mode === 'document' ? 'material' : 'visit');
+            }
+        });
     });
 
     // Form Submission

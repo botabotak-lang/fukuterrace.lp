@@ -976,7 +976,7 @@ h1, h2, h3, h4 {
 .list li { margin: 8px 0; }
 
 /* Links visibility (buttons/nav髯､縺・ */
-a:not(.btn):not(.site-nav a) { color: var(--brand-600); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
+a:not(.btn):not(.site-nav a):not(.cta-tile):not(.cta-doc-link):not(.btn-visit):not(.btn-phone) { color: var(--brand-600); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
 
 /* FAQ - 大きく見やすく */
 .accordion details { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin: 12px 0; }
@@ -1754,4 +1754,105 @@ html, body { overscroll-behavior-x: none; touch-action: pan-y; max-width: 100%; 
   width: calc(100% - 64px);
   padding: 18px; /* ボタン大きく */
   font-size: 1.1rem;
+}
+
+/* === NEW CTA LAYOUT (2025-12-16) === */
+.new-cta-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Main CTA (Document Request) */
+.cta-main {
+  text-align: center;
+  width: 100%;
+}
+.cta-microcopy {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #555;
+  margin: 0 0 6px;
+  text-align: center;
+}
+.cta-doc-link {
+  display: block;
+  width: 100%;
+  transition: opacity 0.2s;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+}
+.cta-doc-link:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+.cta-doc-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Sub CTA (Visit & Phone) */
+.cta-sub {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+.btn-visit {
+  width: 62%;
+  background: var(--cta); /* 緑系（brand）ではなくオレンジ（cta）で目立たせるか？ 指示は緑系 */
+  background: var(--primary); /* 指示通り緑系(primary) */
+  color: #fff;
+  text-decoration: none;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.3;
+  padding: 12px 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: all 0.2s;
+}
+.btn-visit:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+.btn-phone {
+  width: 36%;
+  background: #fff;
+  border: 2px solid #ccc;
+  color: #444;
+  text-decoration: none;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  padding: 12px 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+.btn-phone:hover {
+  background: #f9f9f9;
+  border-color: #bbb;
+}
+
+/* Mobile adjustments */
+.sp-only { display: none; }
+@media (max-width: 480px) {
+  .sp-only { display: inline; }
+  .new-cta-container { max-width: 100%; }
+  .btn-visit { font-size: 0.95rem; }
+  .btn-phone { font-size: 0.85rem; }
 }
