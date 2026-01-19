@@ -1,22 +1,8 @@
 ﻿<?php
 // fukuterrace-LP/send.php
-// 文面反映・文字化け修正（UTF-8固定）・ログ出力あり
+// 修正版：ログ機能削除・500エラー対策版
 
-// ログ設定
-ini_set('log_errors', 'On');
-ini_set('error_log', __DIR__ . '/php_error.log');
-$debug_log = __DIR__ . '/debug_log.txt';
-
-function writeLog($msg) {
-    global $debug_log;
-    $date = date('Y-m-d H:i:s');
-    file_put_contents($debug_log, "[$date] $msg\n", FILE_APPEND);
-}
-
-writeLog("--- Access Started (Template Version) ---");
-
-// 【重要】文字化け対策: UTF-8で統一して送る設定
-mb_language("uni"); 
+// 文字化け対策: UTF-8で統一
 mb_internal_encoding("UTF-8");
 
 header('Access-Control-Allow-Origin: *');
@@ -24,6 +10,7 @@ header('X-Content-Type-Options: nosniff');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
+    echo json_encode(['error' => 'Method Not Allowed']);
     exit;
 }
 
@@ -63,9 +50,9 @@ $visitDate2 = $vDate2 . ($vTime2 ? ' ' . $vTime2 : '');
 $modeText = ($mode === 'visit' ? '見学予約' : '資料請求');
 
 // バリデーション
-if (!$email) {
+if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     http_response_code(400);
-    echo "メールアドレスが必要です";
+    echo json_encode(['error' => 'メールアドレスが必要です']);
     exit;
 }
 
@@ -103,9 +90,17 @@ $headers .= "Content-Type: text/plain; charset=UTF-8";
 
 // 管理者へ送信（個別ループ）
 $success_count = 0;
+$error_messages = [];
+
 foreach ($recipients as $to) {
-    if (mb_send_mail($to, $adminSubject, $adminBody, $headers, "-f $from_email")) {
-        $success_count++;
+    try {
+        if (@mb_send_mail($to, $adminSubject, $adminBody, $headers)) {
+            $success_count++;
+        } else {
+            $error_messages[] = "送信失敗: $to";
+        }
+    } catch (Exception $e) {
+        $error_messages[] = "エラー: $to - " . $e->getMessage();
     }
 }
 
@@ -131,11 +126,15 @@ $autoHeaders = "From: $from_email\r\n";
 $autoHeaders .= "Content-Type: text/plain; charset=UTF-8";
 
 // お客様へ送信
-mb_send_mail($email, $customerSubject, $customerBody, $autoHeaders, "-f $from_email");
+try {
+    @mb_send_mail($email, $customerSubject, $customerBody, $autoHeaders);
+} catch (Exception $e) {
+    // 自動返信が失敗しても管理者への送信は成功させる
+}
 
 if ($success_count > 0) {
-    echo "OK";
+    echo json_encode(['status' => 'OK', 'message' => 'メール送信完了']);
 } else {
     http_response_code(500);
-    echo "Mail Error";
+    echo json_encode(['error' => 'メール送信に失敗しました', 'details' => $error_messages]);
 }
